@@ -37,3 +37,41 @@
     color: var(--text-muted);
   }
 }
+
+.record-list-page {
+  // 기록순 / 제품별 전환. 같은 목록을 다르게 보여주는 거라 탭처럼 붙여 둔다
+  &__views {
+    display: flex;
+    gap: 4px;
+    padding: 3px;
+    background: var(--surface-2);
+    border-radius: t.$radius-pill;
+  }
+
+  &__view {
+    flex: 1;
+    padding: 7px 12px;
+    border: 0;
+    border-radius: t.$radius-pill;
+    background: none;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 700;
+    transition: background 0.15s t.$ease, color 0.15s t.$ease;
+
+    &--active {
+      background: var(--surface);
+      color: var(--text);
+      box-shadow: var(--shadow-sm);
+    }
+  }
+
+  &__products {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+}

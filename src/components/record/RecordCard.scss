@@ -128,11 +128,36 @@
     font-weight: 700;
   }
 
+  &__bdage-wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
   &__badges {
+    display: flex;
+    // 배지 묶음은 왼쪽, 단가는 오른쪽 끝에. 배지가 길어지면 단가가 아래로 내려간다
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+    margin-top: 5px;
+  }
+
+  &__badge-wrap {
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
-    margin-top: 5px;
+    min-width: 0;
+  }
+
+  // 값 자체보다 "비교용 참고"라 배지보다 조용하게 둔다
+  &__price-unit {
+    flex-shrink: 0;
+    font-size: 11px;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
   }
 
   &__badge {

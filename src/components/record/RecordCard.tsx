@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import type { FeedRecord } from '../../types';
 import { FOOD_TYPE_MAP, REPURCHASE_MAP, STOOL_MAP } from '../../utils/options';
-import { formatPrice, formatRelativeDate, formatVolume } from '../../utils/format';
+import { formatPrice, formatRelativeDate, formatUnitPrice, formatVolume } from '../../utils/format';
 import { useCats } from '../../hooks/useCats';
 import CatAvatar from '../cat/CatAvatar';
 import RatingHearts from './RatingHearts';
@@ -18,6 +18,8 @@ export default function RecordCard({ record }: { record: FeedRecord }) {
   const stool = STOOL_MAP[record.stool];
   const repurchase = REPURCHASE_MAP[record.repurchase];
   const volume = formatVolume(record.volume);
+  // 목록에서 제품끼리 비교할 때 실제로 쓰는 값. 개·팩 단위는 환산이 안 돼 null이다
+  const unitPrice = formatUnitPrice(record);
 
   return (
     <li className="record-card">
@@ -62,15 +64,19 @@ export default function RecordCard({ record }: { record: FeedRecord }) {
           </div>
 
           <div className="record-card__badges">
-            <span className="record-card__badge">
-              {foodType.emoji} {foodType.label}
-            </span>
-            <span className={`record-card__badge record-card__badge--stool-${record.stool}`}>
-              {stool.emoji} {stool.label}
-            </span>
-            <span className={`record-card__badge record-card__badge--repurchase-${record.repurchase}`}>
-              {repurchase.emoji} {repurchase.label}
-            </span>
+            <div className="record-card__badge-wrap">
+              <span className="record-card__badge">
+                {foodType.emoji} {foodType.label}
+              </span>
+              <span className={`record-card__badge record-card__badge--stool-${record.stool}`}>
+                {stool.emoji} {stool.label}
+              </span>
+              <span className={`record-card__badge record-card__badge--repurchase-${record.repurchase}`}>
+                {repurchase.emoji} {repurchase.label}
+              </span>
+            </div>
+
+            {unitPrice && <span className="record-card__price-unit">{unitPrice}</span>}
           </div>
         </div>
       </Link>
