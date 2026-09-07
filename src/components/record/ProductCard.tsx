@@ -42,11 +42,8 @@ export default function ProductCard({ group }: { group: ProductGroup }) {
         </div>
       </div>
 
-      {group.averageUnitPrice && (
-        <p className="product-card__unit">
-          100{group.averageUnitPrice.unit}당 평균{' '}
-          <strong>{formatPrice(Math.round(group.averageUnitPrice.per100))}</strong>
-        </p>
+      {group.averageUnitPriceLabel && (
+        <p className="product-card__unit">{group.averageUnitPriceLabel}</p>
       )}
 
       <ul className="product-card__purchases">

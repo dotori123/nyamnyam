@@ -50,6 +50,26 @@ export interface UnitPrice {
 }
 
 /**
+ * 낱개로 파는 제품의 개당(팩당) 가격.
+ *
+ * 습식·츄르는 원래 개수로 판다. 한 개가 몇 그램인지는 앱이 알 수 없지만,
+ * **"츄르 14개 12,900원 = 개당 921원"** 은 실제 구매 판단에 그대로 쓰이는 값이다.
+ * 무게 단가와 단위가 달라 한 줄에 섞어 순위를 매기지는 않고, 표시할 때만 쓴다.
+ */
+export interface CountPrice {
+  perItem: number;
+  unit: 'ea' | 'pack';
+}
+
+export function countPricePerItem(record: FeedRecord): CountPrice | null {
+  const { price, volume } = record;
+  if (price === null || !volume || volume.amount <= 0) return null;
+  if (volume.unit !== 'ea' && volume.unit !== 'pack') return null;
+
+  return { perItem: price / volume.amount, unit: volume.unit };
+}
+
+/**
  * 기록 한 건의 100g/100ml당 단가.
  *
  * 개·팩 단위는 환산할 수 없어 null이다 (한 개가 몇 그램인지 앱이 알 방법이 없다).

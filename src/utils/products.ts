@@ -1,5 +1,5 @@
 import type { FeedRecord, FoodType, Photo, Rating, SortKey } from '../types';
-import { unitPricePer100 } from './stats';
+import { countPricePerItem, unitPricePer100 } from './stats';
 
 /**
  * 같은 제품을 묶어 보기.
@@ -35,8 +35,13 @@ export interface ProductGroup {
   cheapest: Purchase | null;
   /** 가장 최근 구매 */
   latest: Purchase;
-  /** 100g/100ml당 평균 단가. 환산 가능한 기록이 없으면 null */
-  averageUnitPrice: { per100: number; unit: 'g' | 'ml' } | null;
+  /**
+   * 평균 단가를 사람이 읽을 한 줄 ("100g당 평균 1,420원" / "개당 평균 921원").
+   * 무게로 산 제품과 낱개로 산 제품을 같은 자리에 보여주려고 문자열로 만들어 둔다.
+   */
+  averageUnitPriceLabel: string | null;
+  /** 정렬용 숫자. 무게로 환산되는 제품만 값이 있다 (개수 단위와 섞어 세지 않으려고) */
+  sortableUnitPrice: number | null;
 }
 
 /**
@@ -88,6 +93,24 @@ export function groupByProduct(records: FeedRecord[]): ProductGroup[] {
       .map(unitPricePer100)
       .filter((value): value is { per100: number; unit: 'g' | 'ml' } => value !== null);
 
+    // 무게로 환산이 안 되는 제품(습식·츄르처럼 개수로 파는 것)은 개당 가격으로 적는다
+    const countPrices = sorted
+      .map(countPricePerItem)
+      .filter((value): value is { perItem: number; unit: 'ea' | 'pack' } => value !== null);
+
+    const average = (values: number[]) => values.reduce((sum, v) => sum + v, 0) / values.length;
+    const won = (value: number) => Math.round(value).toLocaleString('ko-KR');
+
+    let averageUnitPriceLabel: string | null = null;
+    if (unitPrices.length) {
+      // 단위가 섞여 있으면 많은 쪽으로 적는다
+      const unit = unitPrices.filter((v) => v.unit === 'ml').length > unitPrices.length / 2 ? 'ml' : 'g';
+      averageUnitPriceLabel = `100${unit}당 평균 ${won(average(unitPrices.map((v) => v.per100)))}원`;
+    } else if (countPrices.length) {
+      const label = countPrices[0].unit === 'pack' ? '팩당' : '개당';
+      averageUnitPriceLabel = `${label} 평균 ${won(average(countPrices.map((v) => v.perItem)))}원`;
+    }
+
     return {
       key,
       // 표기는 가장 최근에 적은 걸 따른다 (오타를 고쳤다면 새 표기가 맞을 테니)
@@ -99,20 +122,15 @@ export function groupByProduct(records: FeedRecord[]): ProductGroup[] {
       averageRating: group.reduce((sum, record) => sum + record.rating, 0) / group.length,
       cheapest,
       latest: purchases[0],
-      averageUnitPrice: unitPrices.length
-        ? {
-            per100: unitPrices.reduce((sum, value) => sum + value.per100, 0) / unitPrices.length,
-            // 섞여 있으면 더 많은 쪽 단위로 적는다
-            unit: unitPrices.filter((v) => v.unit === 'ml').length > unitPrices.length / 2 ? 'ml' : 'g',
-          }
-        : null,
+      averageUnitPriceLabel,
+      sortableUnitPrice: unitPrices.length ? average(unitPrices.map((v) => v.per100)) : null,
     };
   });
 }
 
 /** 기록 목록과 같은 정렬 기준을 제품 묶음에도 적용한다 */
 export function sortProducts(groups: ProductGroup[], sort: SortKey): ProductGroup[] {
-  const byUnitPrice = (group: ProductGroup) => group.averageUnitPrice?.per100 ?? null;
+  const byUnitPrice = (group: ProductGroup) => group.sortableUnitPrice;
 
   return [...groups].sort((a, b) => {
     switch (sort) {

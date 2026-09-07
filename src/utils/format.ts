@@ -1,5 +1,5 @@
 import type { FeedRecord, Volume } from '../types';
-import { unitPricePer100 } from './stats';
+import { countPricePerItem, unitPricePer100 } from './stats';
 
 const priceFormatter = new Intl.NumberFormat('ko-KR');
 
@@ -14,12 +14,26 @@ export function formatVolume(volume: Volume | null): string | null {
   return `${priceFormatter.format(volume.amount)}${unitLabel}`;
 }
 
-/** 100g / 100ml 당 단가. 계산 불가하면 null. 환산 규칙은 utils/stats.ts에 한 벌만 둔다 */
+/**
+ * 비교용 단가 한 줄.
+ *
+ * 무게·부피로 산 것은 100g/100ml당, 낱개로 산 것은 개당(팩당)으로 적는다.
+ * 습식·츄르는 원래 개수로 팔아서, 개당 가격을 안 보여주면 정작 자주 사는 것들이
+ * 전부 빈칸이 된다. 환산 규칙은 utils/stats.ts에 한 벌만 둔다.
+ */
 export function formatUnitPrice(record: FeedRecord): string | null {
   const unitPrice = unitPricePer100(record);
-  if (!unitPrice) return null;
+  if (unitPrice) {
+    return `100${unitPrice.unit}당 ${priceFormatter.format(Math.round(unitPrice.per100))}원`;
+  }
 
-  return `100${unitPrice.unit}당 ${priceFormatter.format(Math.round(unitPrice.per100))}원`;
+  const countPrice = countPricePerItem(record);
+  if (countPrice) {
+    const label = countPrice.unit === 'pack' ? '팩당' : '개당';
+    return `${label} ${priceFormatter.format(Math.round(countPrice.perItem))}원`;
+  }
+
+  return null;
 }
 
 /** "3일 전" 같은 상대 시간 */
