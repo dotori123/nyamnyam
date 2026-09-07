@@ -7,6 +7,7 @@ import type {
   VolumeUnit,
 } from '../../types';
 import {
+  DEFAULT_VOLUME_UNIT,
   FOOD_TYPE_OPTIONS,
   REPURCHASE_OPTIONS,
   STOOL_OPTIONS,
@@ -90,6 +91,21 @@ export default function RecordForm({
     if ((FIELD_ORDER as string[]).includes(key)) {
       setErrors((prev) => ({ ...prev, [key]: undefined }));
     }
+  };
+
+  /**
+   * 종류를 바꾸면 용량 단위도 그 종류에 흔한 것으로 따라간다 (습식·건사료 g, 간식 개).
+   *
+   * 단, **용량을 이미 적었으면 단위를 건드리지 않는다.**
+   * "85"를 적어 둔 상태에서 단위가 말없이 개로 바뀌면 85g이 85개가 되어
+   * 숫자의 뜻이 통째로 달라진다.
+   */
+  const setFoodType = (next: FeedRecordFormValues['foodType']) => {
+    setValues((prev) => ({
+      ...prev,
+      foodType: next,
+      volumeUnit: prev.volumeAmount.trim() ? prev.volumeUnit : DEFAULT_VOLUME_UNIT[next],
+    }));
   };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -197,7 +213,7 @@ export default function RecordForm({
               <Chip
                 key={option.value}
                 selected={values.foodType === option.value}
-                onClick={() => setValue('foodType', option.value)}
+                onClick={() => setFoodType(option.value)}
               >
                 {option.emoji} {option.label}
               </Chip>

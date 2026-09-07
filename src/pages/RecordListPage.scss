@@ -43,6 +43,9 @@
   &__views {
     display: flex;
     gap: 4px;
+    // 좌우 16px은 이 화면의 다른 블록들(통계 카드·목록)과 맞춘 값이다.
+    // 아래 margin은 전환 버튼과 카드가 붙어 보이지 않게 띄운다.
+    margin: 0 16px 12px;
     padding: 3px;
     background: var(--surface-2);
     border-radius: t.$radius-pill;
@@ -71,7 +74,8 @@
     flex-direction: column;
     gap: 10px;
     margin: 0;
-    padding: 0;
+    // 기록 목록(RecordList)과 같은 좌우 여백
+    padding: 0 16px;
     list-style: none;
   }
 }
