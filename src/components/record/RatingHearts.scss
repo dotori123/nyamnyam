@@ -1,0 +1,57 @@
+@use '../../styles/tokens' as t;
+
+.rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  line-height: 1;
+
+  &--sm {
+    font-size: 11px;
+  }
+
+  &--md {
+    font-size: 14px;
+  }
+
+  &--lg {
+    font-size: 22px;
+    gap: 4px;
+  }
+
+  &__heart--off {
+    opacity: 0.55;
+  }
+
+  &__value {
+    margin-left: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-muted);
+  }
+
+  &--input {
+    gap: 2px;
+  }
+
+  &__button {
+    padding: 4px;
+    background: none;
+    border: none;
+    font-size: inherit;
+    line-height: 1;
+    transition: transform 0.12s t.$ease;
+
+    &:hover {
+      transform: scale(1.15);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+
+    &--off {
+      opacity: 0.55;
+    }
+  }
+}

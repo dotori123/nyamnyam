@@ -1,0 +1,125 @@
+@use '../../styles/tokens' as t;
+@use '../../styles/mixins' as m;
+
+.filter-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 0 8px;
+
+  &__search {
+    padding: 0 16px;
+  }
+
+  &__cats {
+    @include m.scroll-x;
+    padding: 0 16px;
+  }
+
+  &__types {
+    @include m.scroll-x;
+    padding: 0 16px;
+  }
+
+  &__toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    flex: 0 0 auto;
+    padding: 7px 13px;
+    background: var(--surface);
+    border: 1px dashed var(--border-strong);
+    border-radius: t.$radius-pill;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+
+    &--on {
+      border-style: solid;
+      border-color: var(--primary);
+      color: var(--primary-ink);
+    }
+  }
+
+  &__count {
+    display: grid;
+    place-items: center;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    background: var(--primary);
+    border-radius: t.$radius-pill;
+    color: var(--on-primary);
+    font-size: 10px;
+  }
+
+  &__panel {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 0 16px;
+    padding: 14px;
+    background: var(--surface-2);
+    border-radius: t.$radius-md;
+  }
+
+  &__section-title {
+    margin-bottom: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-muted);
+  }
+
+  &__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  &__reset {
+    align-self: flex-start;
+    padding: 0;
+    background: none;
+    border: none;
+    color: var(--primary-ink);
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: underline;
+  }
+
+  &__result {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+  }
+
+  &__result-count {
+    font-size: 13px;
+    color: var(--text-muted);
+
+    strong {
+      color: var(--text);
+    }
+  }
+
+  &__sort {
+    padding: 6px 26px 6px 10px;
+    background: transparent;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 12 8'%3E%3Cpath fill='%236f6a5f' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    appearance: none;
+    border: 1px solid var(--border);
+    border-radius: t.$radius-pill;
+    color: var(--text);
+    font-size: 12px;
+    font-weight: 600;
+
+    &:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+  }
+}

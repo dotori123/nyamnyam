@@ -1,0 +1,42 @@
+// SCSS 토큰 — 브랜드 팔레트 + 미디어쿼리/계산에 쓰는 값들.
+//
+// 브랜드 원색만 여기 SCSS 변수로 두고,
+// 실제 화면에 쓰이는 색은 global.scss에서 이 값들을 받아
+// CSS 변수(--bg, --primary …)로 펼친다. (런타임 테마 전환을 위해)
+// → 브랜드 색을 바꾸려면 아래 세 줄만 고치면 된다.
+
+// ── 삼색이(calico) 브랜드 팔레트 ──────────────
+/// 크림 — 배경
+$color-cream: #faf7f2;
+/// 오렌지 — 포인트
+$color-orange: #f4a71a;
+/// 블랙 — 포인트 / 본문
+$color-black: #26261f;
+
+/// 오렌지를 밝은 배경 위 '텍스트'로 쓸 때 (대비 확보용 딥 앰버)
+$color-orange-ink: #8f5a06;
+/// 오렌지 hover / 눌림
+$color-orange-deep: #dc8c05;
+
+// ── 타이포 ────────────────────────────────
+/// 본문 폰트 스택.
+///  - 'Pretendard Variable' : src/main.tsx에서 불러오는 가변 웹폰트(unicode-range 분할본)
+///  - 'Pretendard'          : 사용자가 로컬에 설치해 둔 경우
+///  - 나머지                 : OS 기본 한글 폴백
+$font-sans: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont,
+  'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', system-ui, sans-serif;
+
+$bp-sm: 480px;
+$bp-md: 768px;
+$bp-lg: 1024px;
+
+$app-max-width: 520px;
+$header-height: 56px;
+$bottom-nav-height: 64px;
+
+$radius-sm: 8px;
+$radius-md: 14px;
+$radius-lg: 20px;
+$radius-pill: 999px;
+
+$ease: cubic-bezier(0.4, 0, 0.2, 1);

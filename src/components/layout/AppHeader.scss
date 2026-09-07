@@ -1,0 +1,81 @@
+@use '../../styles/tokens' as t;
+
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: t.$header-height;
+  padding: 8px 16px;
+  padding-top: calc(8px + env(safe-area-inset-top));
+  background: color-mix(in srgb, var(--bg) 85%, transparent);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+
+  &--brand {
+    justify-content: space-between;
+    padding-block: 14px;
+  }
+
+  &__brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  &__logo {
+    display: block;
+    flex: 0 0 auto;
+    width: 40px;
+    height: 40px;
+    border-radius: t.$radius-md;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+
+  &__title {
+    font-size: 19px;
+    font-weight: 800;
+
+    &--sub {
+      font-size: 17px;
+      font-weight: 700;
+    }
+  }
+
+  &__subtitle {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  &__settings {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 36px;
+    height: 36px;
+    font-size: 17px;
+    border-radius: t.$radius-sm;
+
+    &:hover {
+      background: var(--surface-2);
+    }
+  }
+
+  &__back {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
+    background: transparent;
+    border: none;
+    border-radius: t.$radius-sm;
+
+    &:hover {
+      background: var(--surface-2);
+    }
+  }
+}

@@ -1,0 +1,169 @@
+@use '../../styles/tokens' as t;
+@use '../../styles/mixins' as m;
+
+.record-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: t.$radius-lg;
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: transform 0.15s t.$ease, box-shadow 0.15s t.$ease;
+
+  &:active {
+    transform: scale(0.99);
+  }
+
+  &:hover {
+    box-shadow: var(--shadow-md);
+  }
+
+  &__link {
+    display: flex;
+    gap: 12px;
+    padding: 12px;
+  }
+
+  &__thumb {
+    position: relative;
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    width: 88px;
+    height: 88px;
+    background: var(--surface-2);
+    border-radius: t.$radius-md;
+    overflow: hidden;
+  }
+
+  &__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__placeholder {
+    font-size: 30px;
+    opacity: 0.5;
+  }
+
+  &__count {
+    position: absolute;
+    right: 4px;
+    bottom: 4px;
+    padding: 1px 6px;
+    background: rgb(0 0 0 / 55%);
+    border-radius: t.$radius-pill;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+  }
+
+  &__body {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  &__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  &__brand {
+    @include m.ellipsis;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--primary-ink);
+  }
+
+  &__date {
+    flex: 0 0 auto;
+    font-size: 11px;
+    color: var(--text-faint);
+  }
+
+  &__cat {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    align-self: flex-start;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+  }
+
+  &__name {
+    @include m.ellipsis;
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: var(--text-muted);
+    @include m.ellipsis;
+  }
+
+  &__dot {
+    opacity: 0.5;
+  }
+
+  &__rating {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 2px;
+  }
+
+  &__price {
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  &__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 5px;
+  }
+
+  &__badge {
+    padding: 2px 7px;
+    background: var(--surface-2);
+    border-radius: t.$radius-pill;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-muted);
+
+    &--stool-good {
+      color: var(--good);
+    }
+
+    &--stool-diarrhea,
+    &--stool-constipated {
+      color: var(--danger);
+    }
+
+    &--stool-soft,
+    &--stool-hard {
+      color: var(--warn);
+    }
+
+    &--repurchase-yes {
+      background: var(--primary-soft);
+      color: var(--primary-ink);
+    }
+
+    &--repurchase-no {
+      color: var(--danger);
+    }
+  }
+}

@@ -1,0 +1,42 @@
+@use '../../styles/tokens' as t;
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex: 0 0 auto;
+  padding: 7px 13px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: t.$radius-pill;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: all 0.15s t.$ease;
+
+  &--sm {
+    padding: 4px 9px;
+    font-size: 11px;
+  }
+
+  &:not(.chip--static):hover {
+    border-color: var(--border-strong);
+    color: var(--text);
+  }
+
+  &--selected {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: var(--on-primary);
+
+    &:hover {
+      color: var(--on-primary);
+    }
+  }
+
+  &--static {
+    background: var(--surface-2);
+    border-color: transparent;
+  }
+}

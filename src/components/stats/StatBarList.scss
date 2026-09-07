@@ -1,0 +1,72 @@
+@use '../../styles/tokens' as t;
+
+.stat-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  &__row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  &__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  &__label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    min-width: 0;
+    font-size: 13px;
+    // 긴 브랜드명이 값을 밀어내지 않게
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__emoji {
+    font-size: 12px;
+  }
+
+  // 값은 본문색, 보조는 흐리게. 막대 색을 글자에 쓰지 않는다
+  &__value {
+    flex-shrink: 0;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  &__caption {
+    margin-left: 5px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-muted);
+  }
+
+  &__track {
+    height: 8px;
+    border-radius: t.$radius-pill;
+
+    // 전체 대비 비율을 보여줄 때만 트랙을 깐다.
+    // --surface-2는 bg에서 파생돼서 다크 모드의 카드 위에 올리면 묻힌다(1.04:1).
+    // 반투명 잉크는 깔린 면이 밝든 어둡든 같은 만큼 눌러줘서 양쪽에서 보인다.
+    &--filled {
+      background: color-mix(in srgb, var(--text) 12%, transparent);
+    }
+  }
+
+  &__bar {
+    height: 100%;
+    // 시작은 각지게, 끝만 둥글게 — 막대가 기준선에서 자란다는 게 보이도록
+    border-radius: 0 4px 4px 0;
+    transition: width 0.25s t.$ease;
+  }
+}

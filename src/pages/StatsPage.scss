@@ -1,0 +1,72 @@
+@use '../styles/tokens' as t;
+
+.stats-page {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px 16px 24px;
+
+  &__filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  // 요약 숫자 — 차트가 아니라 값 자체가 답인 것들
+  &__tiles {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__tile {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: t.$radius-lg;
+  }
+
+  &__tile-value {
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1.2;
+    // 큰 숫자는 비례 숫자로. tabular-nums는 세로로 줄맞춤할 때만
+  }
+
+  &__tile-label {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  &__tile-note {
+    font-size: 11px;
+  }
+
+  &__section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: t.$radius-lg;
+  }
+
+  &__title {
+    font-size: 14px;
+    font-weight: 800;
+  }
+
+  &__hint {
+    margin-top: -4px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--text-muted);
+  }
+}

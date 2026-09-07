@@ -1,0 +1,107 @@
+@use '../../styles/tokens' as t;
+
+.theme-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  &__card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 12px;
+    // 카드는 자기 테마 색으로 미리보기를 그린다
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: t.$radius-lg;
+    color: var(--text);
+    text-align: left;
+    transition: border-color 0.15s t.$ease, box-shadow 0.15s t.$ease, transform 0.1s t.$ease;
+
+    &:hover {
+      border-color: var(--border-strong);
+    }
+
+    &:active {
+      transform: scale(0.99);
+    }
+
+    &--selected {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-soft);
+    }
+  }
+
+  &__mark {
+    flex: 0 0 auto;
+    display: block;
+    width: 48px;
+    height: 48px;
+    border-radius: t.$radius-md;
+    overflow: hidden;
+  }
+
+  &__body {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  &__name {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 15px;
+    font-weight: 800;
+  }
+
+  &__badge {
+    padding: 2px 7px;
+    background: var(--primary);
+    border-radius: t.$radius-pill;
+    color: var(--on-primary);
+    font-size: 10px;
+    font-weight: 700;
+  }
+
+  &__description {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  &__swatches {
+    display: flex;
+    gap: 4px;
+    margin-top: 5px;
+  }
+
+  &__swatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 1px solid var(--border-strong);
+
+    &--bg {
+      background: var(--surface);
+    }
+
+    &--primary {
+      background: var(--primary);
+    }
+
+    &--ink {
+      background: var(--text);
+    }
+  }
+
+  &__check {
+    flex: 0 0 auto;
+    width: 14px;
+    color: var(--primary);
+    font-size: 12px;
+    text-align: center;
+  }
+}

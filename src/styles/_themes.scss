@@ -1,0 +1,273 @@
+@use 'sass:color';
+@use 'sass:map';
+
+// ── 고양이 털색 테마 ─────────────────────────────
+//
+// 테마 하나당 모드별로 시드 6개(bg / surface / primary / primary-ink / ink / on-primary)만
+// 정하고, 나머지 톤(면 색, 보조 텍스트, 테두리, 그림자…)은 아래 vars() 믹스인이 파생시킨다.
+// → 새 테마를 추가하려면 $themes에 항목 하나만 더 쓰면 된다.
+//
+// 시드 고를 때 주의:
+//  - primary-ink : 밝은 배경 위에서 '글자'로 쓸 오렌지/포인트색. 본문 대비 4.5:1을 넘겨야 한다.
+//  - on-primary  : primary를 배경으로 깔았을 때 그 위에 얹을 글자색.
+//                  밝은 primary(삼색이·치즈)는 블랙, 어두운 primary(고등어·턱시도·크림)는 화이트.
+//
+// mark 는 로고 마크(CatMark) 전용 색이라 모드와 무관하게 한 벌만 둔다.
+
+$themes: (
+  // 삼색이 — 중성 크림 바탕에 '노란기 있는' 골든 앰버와 진짜 검정.
+  // 치즈와 갈리는 지점: 바탕이 거의 무채색이고, 검정 얼룩이 있어 대비가 세다.
+  calico: (
+    light: (
+      bg: #faf7f2,
+      surface: #ffffff,
+      primary: #f4a71a,
+      primary-ink: #8f5a06,
+      ink: #26261f,
+      on-primary: #26261f,
+    ),
+    dark: (
+      bg: #18181a,
+      surface: #222225,
+      primary: #f5b13c,
+      primary-ink: #f7bf63,
+      ink: #f4f2ea,
+      on-primary: #1d1b16,
+    ),
+    mark: (
+      plate-from: #f4a71a,
+      plate-to: #dc8c05,
+      face: #faf7f2,
+      patch-a: #f4a71a,
+      patch-b: #26261f,
+      rim: #26261f,
+      nose: #f4a71a,
+      line: #26261f,
+    ),
+  ),
+
+  // 치즈 — 진한 버터 크림에 '붉은기 도는' 펌킨 주황. 검정 대신 코코아 브라운.
+  // 삼색이와 갈리는 지점: 바탕까지 노랗고, 가장 어두운 색도 갈색이라 전체가 물렁하게 따뜻하다.
+  cheese: (
+    light: (
+      bg: #fff3dd,
+      surface: #fffaef,
+      primary: #e07c2c,
+      primary-ink: #9c4712,
+      ink: #3a2510,
+      on-primary: #3a2510,
+    ),
+    dark: (
+      bg: #1f1710,
+      surface: #2a2017,
+      primary: #e88748,
+      primary-ink: #f0a06a,
+      ink: #f8ecdb,
+      on-primary: #24160c,
+    ),
+    mark: (
+      plate-from: #e07c2c,
+      plate-to: #bf5c14,
+      face: #fdeed6,
+      patch-a: #e07c2c,
+      patch-b: #b85714,
+      rim: #6d3a07,
+      nose: #cf6415,
+      line: #6d3a07,
+    ),
+  ),
+
+  // 크림 — 아이보리 바탕에 살구빛 코랄과 분홍 코. 파스텔 톤 담당.
+  // 치즈와 갈리는 지점: 주황이 아니라 핑크 쪽으로 넘어간 살구색(hue 6°)이라 훨씬 말갛다.
+  cream: (
+    light: (
+      bg: #fdf5ef,
+      surface: #fffcf8,
+      // 더 연하게 가면 예쁘지만 포커스 링·선택 테두리가 바탕에 묻힌다(3:1 미달).
+      // 파스텔 느낌은 바탕·면·primary-soft가 내고, 포인트색은 여기서 버틴다.
+      primary: #d96e61,
+      primary-ink: #a94a3c,
+      ink: #322722,
+      on-primary: #331c15,
+    ),
+    dark: (
+      bg: #191413,
+      surface: #231d1b,
+      primary: #f0a595,
+      primary-ink: #f4b7a9,
+      ink: #f4ece6,
+      on-primary: #2c1713,
+    ),
+    mark: (
+      plate-from: #f0a68f,
+      plate-to: #dc7d64,
+      face: #fdf3e9,
+      patch-a: #f5bda3,
+      patch-b: #e59275,
+      rim: #6a3b2f,
+      // 크림냥은 코가 분홍이다
+      nose: #ef8f88,
+      line: #6a3b2f,
+    ),
+  ),
+
+  // 고등어 — 은빛 회색 바탕에 청회색 줄무늬. 유일한 쿨톤 테마.
+  mackerel: (
+    light: (
+      bg: #f1f4f6,
+      surface: #ffffff,
+      primary: #4a6d8c,
+      primary-ink: #3a5670,
+      ink: #262f38,
+      on-primary: #ffffff,
+    ),
+    dark: (
+      bg: #15181b,
+      surface: #1e2226,
+      primary: #7ba2c2,
+      primary-ink: #93b5d1,
+      ink: #eaeef2,
+      on-primary: #14181c,
+    ),
+    mark: (
+      plate-from: #5c7f9e,
+      plate-to: #3f5f7c,
+      face: #dae1e7,
+      patch-a: #93a7b7,
+      patch-b: #3a4855,
+      rim: #262f38,
+      nose: #7d8f9d,
+      line: #2f3a45,
+    ),
+  ),
+
+  // 턱시도 — 흰 셔츠에 검정 턱시도. 모노톤이라 가장 담백하다.
+  tuxedo: (
+    light: (
+      bg: #f6f6f7,
+      surface: #ffffff,
+      primary: #2b2b30,
+      primary-ink: #2b2b30,
+      ink: #18181b,
+      on-primary: #ffffff,
+    ),
+    dark: (
+      bg: #131315,
+      surface: #1d1d20,
+      primary: #e6e6ea,
+      primary-ink: #e6e6ea,
+      ink: #f4f4f6,
+      on-primary: #131315,
+    ),
+    mark: (
+      plate-from: #34343a,
+      plate-to: #1c1c20,
+      face: #ffffff,
+      patch-a: #4c4c54,
+      patch-b: #18181b,
+      rim: #18181b,
+      nose: #d8828b,
+      line: #3a3a40,
+    ),
+  ),
+
+);
+
+/// 테마 id 목록 (문서용)
+$theme-ids: map.keys($themes);
+
+/// 시드 6개에서 실제로 쓰이는 CSS 변수를 만들어 낸다.
+@mixin vars($seed, $mode) {
+  $bg: map.get($seed, bg);
+  $surface: map.get($seed, surface);
+  $primary: map.get($seed, primary);
+  $primary-ink: map.get($seed, primary-ink);
+  $ink: map.get($seed, ink);
+  $on-primary: map.get($seed, on-primary);
+
+  --bg: #{$bg};
+  --surface: #{$surface};
+  --surface-2: #{color.mix($ink, $bg, 6%)};
+  --surface-3: #{color.mix($ink, $bg, 12%)};
+
+  --text: #{$ink};
+  --text-muted: #{color.mix($ink, $bg, 65%)};
+  --text-faint: #{color.mix($ink, $bg, 40%)};
+
+  // 라이트에서는 어둡게, 다크에서는 밝게 눌러야 hover가 보인다.
+  // (sass의 if() 함수는 CSS if()에 이름을 내주며 deprecated라 @if로 쓴다)
+  $hover: color.scale($primary, $lightness: 14%);
+  @if $mode == light {
+    $hover: color.scale($primary, $lightness: -12%);
+  }
+
+  --primary: #{$primary};
+  --primary-hover: #{$hover};
+  --primary-soft: #{color.mix($primary, $bg, 18%)};
+  --on-primary: #{$on-primary};
+  --primary-ink: #{$primary-ink};
+
+  --border: #{color.mix($ink, $bg, 10%)};
+  --border-strong: #{color.mix($ink, $bg, 20%)};
+
+  // 상태색은 브랜드 테마와 무관하게 일정해야 읽힌다
+  @if $mode == light {
+    --good: #3f8f63;
+    --warn: #b8791a;
+    --danger: #c0453f;
+
+    --shadow-sm: 0 1px 2px #{color.change($ink, $alpha: 0.06)},
+      0 2px 6px #{color.change($ink, $alpha: 0.04)};
+    --shadow-md: 0 4px 16px #{color.change($ink, $alpha: 0.08)};
+    --shadow-lg: 0 8px 32px #{color.change($ink, $alpha: 0.12)};
+  } @else {
+    --good: #59b381;
+    --warn: #d6a049;
+    --danger: #e07b74;
+
+    --shadow-sm: 0 1px 2px rgb(0 0 0 / 30%);
+    --shadow-md: 0 4px 16px rgb(0 0 0 / 35%);
+    --shadow-lg: 0 8px 32px rgb(0 0 0 / 45%);
+  }
+}
+
+/// 로고 마크(CatMark) 색. 모드와 무관하게 한 벌만 쓴다.
+@mixin mark-vars($mark) {
+  --mark-plate-from: #{map.get($mark, plate-from)};
+  --mark-plate-to: #{map.get($mark, plate-to)};
+  --mark-face: #{map.get($mark, face)};
+  --mark-patch-a: #{map.get($mark, patch-a)};
+  --mark-patch-b: #{map.get($mark, patch-b)};
+  --mark-rim: #{map.get($mark, rim)};
+  --mark-nose: #{map.get($mark, nose)};
+  --mark-line: #{map.get($mark, line)};
+}
+
+/// 모든 테마를 해당 모드로 뿌린다.
+///
+/// 선택자를 :root로 고정하지 않고 [data-theme]도 함께 매칭시키는 이유:
+/// 설정 화면의 테마 카드가 자기 자신에게 data-theme를 달아
+/// 그 테마 색으로 미리보기를 그릴 수 있게 하기 위해서다.
+@mixin emit($mode) {
+  @each $id, $theme in $themes {
+    $seed: map.get($theme, $mode);
+
+    @if $id == calico {
+      // 기본 테마 — data-theme가 없어도 적용된다
+      :root,
+      [data-theme='calico'] {
+        @include vars($seed, $mode);
+        @if $mode == light {
+          @include mark-vars(map.get($theme, mark));
+        }
+      }
+    } @else {
+      [data-theme='#{$id}'] {
+        @include vars($seed, $mode);
+        @if $mode == light {
+          @include mark-vars(map.get($theme, mark));
+        }
+      }
+    }
+  }
+}

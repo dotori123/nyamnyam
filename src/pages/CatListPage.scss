@@ -1,0 +1,21 @@
+.cat-list-page {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px 16px 24px;
+
+  &__hint {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__actions {
+    margin-top: 4px;
+  }
+}

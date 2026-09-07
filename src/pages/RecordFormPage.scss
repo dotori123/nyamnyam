@@ -1,0 +1,17 @@
+@use '../styles/tokens' as t;
+
+.record-form-page {
+  &__notice {
+    margin: 12px 16px 0;
+    padding: 12px 14px;
+    background: var(--primary-soft);
+    border-radius: t.$radius-md;
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--text);
+
+    strong {
+      font-weight: 700;
+    }
+  }
+}

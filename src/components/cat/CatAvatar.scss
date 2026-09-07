@@ -1,0 +1,43 @@
+.cat-avatar {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--surface-2);
+  overflow: hidden;
+
+  &--xs {
+    width: 18px;
+    height: 18px;
+    font-size: 10px;
+  }
+
+  &--sm {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+
+  &--md {
+    width: 56px;
+    height: 56px;
+    font-size: 22px;
+  }
+
+  &--lg {
+    width: 96px;
+    height: 96px;
+    font-size: 38px;
+  }
+
+  &--initial {
+    background: var(--primary-soft);
+    color: var(--primary-ink);
+    font-weight: 800;
+  }
+
+  &--empty {
+    background: var(--surface-2);
+  }
+}

@@ -1,0 +1,36 @@
+.backup-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  &__meta {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__warn {
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--danger);
+
+    strong {
+      font-weight: 700;
+    }
+  }
+
+  &__error {
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--danger);
+  }
+
+  &__actions {
+    display: flex;
+    gap: 8px;
+
+    .btn {
+      flex: 1;
+    }
+  }
+}

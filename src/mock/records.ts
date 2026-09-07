@@ -1,0 +1,255 @@
+import type { FeedRecord } from '../types';
+
+/**
+ * mock 데이터.
+ * Firebase 연동 시 이 배열 대신 Firestore 쿼리 결과를 넣으면 된다.
+ * (자리: src/firebase/records.ts)
+ */
+
+/** n일 전 ISO 문자열 */
+function daysAgo(n: number, hour = 12): string {
+  const d = new Date();
+  d.setDate(d.getDate() - n);
+  d.setHours(hour, 0, 0, 0);
+  return d.toISOString();
+}
+
+/**
+ * 사진 자리를 채우는 인라인 SVG 썸네일.
+ * 네트워크 없이 동작하도록 data URI로 만든다.
+ * 실제 사진이 붙으면 이 함수는 지워도 된다.
+ */
+function thumb(emoji: string, from: string, to: string): string {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0%" stop-color="${from}"/><stop offset="100%" stop-color="${to}"/>
+</linearGradient></defs>
+<rect width="400" height="400" fill="url(#g)"/>
+<text x="200" y="235" font-size="150" text-anchor="middle">${emoji}</text></svg>`;
+  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+}
+
+let photoSeq = 0;
+function photo(emoji: string, from: string, to: string) {
+  photoSeq += 1;
+  return {
+    id: `photo_mock_${photoSeq}`,
+    url: thumb(emoji, from, to),
+    storagePath: null,
+    source: 'library' as const,
+    fileName: null,
+  };
+}
+
+export const MOCK_RECORDS: FeedRecord[] = [
+  {
+    id: 'rec_mock_01',
+    catId: 'cat_mock_01',
+    brand: '이나바 챠오',
+    productName: '츄르 종합영양식',
+    flavor: '참치',
+    foodType: 'treat',
+    volume: { amount: 14, unit: 'ea' },
+    rating: 5,
+    stool: 'good',
+    repurchase: 'yes',
+    price: 12_900,
+    currency: 'KRW',
+    store: '쿠팡',
+    purchasedAt: daysAgo(2),
+    photos: [photo('🍤', '#ffd9c2', '#ff9f6e')],
+    memo: '흡입 수준. 손에서 놓질 않는다. 하루 1개로 제한 중.',
+    tags: ['최애', '기호성갑'],
+    createdAt: daysAgo(2),
+    updatedAt: daysAgo(2),
+  },
+  {
+    id: 'rec_mock_02',
+    catId: 'cat_mock_02',
+    brand: '지위픽',
+    productName: '에어드라이 캣푸드',
+    flavor: '양고기',
+    foodType: 'dry',
+    volume: { amount: 400, unit: 'g' },
+    rating: 4,
+    stool: 'good',
+    repurchase: 'yes',
+    price: 38_000,
+    currency: 'KRW',
+    store: '마이펫샵',
+    purchasedAt: daysAgo(9),
+    photos: [photo('🥩', '#e8dcc8', '#c2a878')],
+    memo: '비싸긴 한데 변 냄새가 확실히 덜하다. 알갱이가 커서 잘게 부숴서 급여.',
+    tags: ['그레인프리', '고단백'],
+    createdAt: daysAgo(9),
+    updatedAt: daysAgo(9),
+  },
+  {
+    id: 'rec_mock_03',
+    catId: 'cat_mock_01',
+    brand: '로얄캐닌',
+    productName: '인도어 27',
+    flavor: '치킨',
+    foodType: 'dry',
+    volume: { amount: 2, unit: 'kg' },
+    rating: 3,
+    stool: 'soft',
+    repurchase: 'maybe',
+    price: 34_500,
+    currency: 'KRW',
+    store: '쿠팡',
+    purchasedAt: daysAgo(21),
+    photos: [photo('🥣', '#dbe9f4', '#8fb8d8')],
+    memo: '무난하게 먹긴 하는데 변이 살짝 무름. 다른 사료랑 섞어서 급여하니 괜찮아짐.',
+    tags: ['실내묘'],
+    createdAt: daysAgo(21),
+    updatedAt: daysAgo(20),
+  },
+  {
+    id: 'rec_mock_04',
+    catId: 'cat_mock_03',
+    brand: '시바',
+    productName: '두오 델리스',
+    flavor: '연어',
+    foodType: 'wet',
+    volume: { amount: 85, unit: 'g' },
+    rating: 5,
+    stool: 'good',
+    repurchase: 'yes',
+    price: 2_400,
+    currency: 'KRW',
+    store: '동네 펫샵',
+    purchasedAt: daysAgo(4),
+    photos: [photo('🐟', '#ffe0e6', '#ff9bb0')],
+    memo: '국물까지 싹 비움. 낱개라 여행 갈 때 챙기기 좋다.',
+    tags: ['습식', '국물'],
+    createdAt: daysAgo(4),
+    updatedAt: daysAgo(4),
+  },
+  {
+    id: 'rec_mock_05',
+    catId: 'cat_mock_02',
+    brand: '오리젠',
+    productName: '캣 앤 키튼',
+    flavor: '닭고기',
+    foodType: 'dry',
+    volume: { amount: 1.8, unit: 'kg' },
+    rating: 2,
+    stool: 'diarrhea',
+    repurchase: 'no',
+    price: 52_000,
+    currency: 'KRW',
+    store: '네이버 스마트스토어',
+    purchasedAt: daysAgo(45),
+    photos: [photo('🐔', '#f2e4d2', '#d1a76c')],
+    memo: '단백질 함량이 너무 높았는지 이틀 만에 설사. 아깝지만 중단.',
+    tags: ['실패', '고단백'],
+    createdAt: daysAgo(45),
+    updatedAt: daysAgo(43),
+  },
+  {
+    id: 'rec_mock_06',
+    catId: 'cat_mock_01',
+    brand: '하림펫푸드',
+    productName: '더리얼 그레인프리',
+    flavor: '연어',
+    foodType: 'dry',
+    volume: { amount: 1, unit: 'kg' },
+    rating: 4,
+    stool: 'good',
+    repurchase: 'yes',
+    price: 19_800,
+    currency: 'KRW',
+    store: '쿠팡',
+    purchasedAt: daysAgo(14),
+    photos: [photo('🍚', '#ffeecc', '#f0bd6a')],
+    memo: '가성비 좋음. 알갱이 작아서 잘 먹는다.',
+    tags: ['가성비', '국산'],
+    createdAt: daysAgo(14),
+    updatedAt: daysAgo(14),
+  },
+  {
+    id: 'rec_mock_07',
+    catId: 'cat_mock_03',
+    brand: '앙팡',
+    productName: '캣 습식 파우치',
+    flavor: '참치',
+    foodType: 'wet',
+    volume: { amount: 100, unit: 'g' },
+    rating: 3,
+    stool: 'unknown',
+    repurchase: 'maybe',
+    price: 1_500,
+    currency: 'KRW',
+    store: '이마트',
+    purchasedAt: daysAgo(30),
+    photos: [],
+    memo: '가끔 남긴다. 물 보충용으로는 나쁘지 않음.',
+    tags: ['수분보충'],
+    createdAt: daysAgo(30),
+    updatedAt: daysAgo(30),
+  },
+  {
+    id: 'rec_mock_08',
+    catId: 'cat_mock_02',
+    brand: '나우',
+    productName: '프레시 그레인프리 어덜트',
+    flavor: '터키',
+    foodType: 'dry',
+    volume: { amount: 1.8, unit: 'kg' },
+    rating: 4,
+    stool: 'hard',
+    repurchase: 'maybe',
+    price: 43_000,
+    currency: 'KRW',
+    store: '마이펫샵',
+    purchasedAt: daysAgo(60),
+    photos: [photo('🦃', '#e6f0dd', '#9dc182')],
+    memo: '기호성은 좋은데 물을 잘 안 마시면 변이 딱딱해진다. 습식 병행 필요.',
+    tags: ['그레인프리'],
+    createdAt: daysAgo(60),
+    updatedAt: daysAgo(60),
+  },
+  {
+    id: 'rec_mock_09',
+    catId: 'cat_mock_03',
+    brand: '뉴트리플랜',
+    productName: '캣 캔',
+    flavor: '참치+닭가슴살',
+    foodType: 'wet',
+    volume: { amount: 160, unit: 'g' },
+    rating: 5,
+    stool: 'good',
+    repurchase: 'yes',
+    price: 1_900,
+    currency: 'KRW',
+    store: '쿠팡',
+    purchasedAt: daysAgo(6),
+    photos: [photo('🥫', '#dff0ee', '#7cc0b8')],
+    memo: '싸고 잘 먹어서 박스로 쟁여둠. 국물 많은 편.',
+    tags: ['가성비', '습식'],
+    createdAt: daysAgo(6),
+    updatedAt: daysAgo(6),
+  },
+  {
+    id: 'rec_mock_10',
+    catId: null,
+    brand: '아미쿡',
+    productName: '헤어볼 케어 영양제',
+    flavor: '몰트',
+    foodType: 'supplement',
+    volume: { amount: 50, unit: 'g' },
+    rating: 3,
+    stool: 'good',
+    repurchase: 'maybe',
+    price: 15_000,
+    currency: 'KRW',
+    store: '네이버 스마트스토어',
+    purchasedAt: daysAgo(38),
+    photos: [],
+    memo: '헤어볼 토하는 빈도는 줄었는데 맛은 별로인지 억지로 먹인다.',
+    tags: ['헤어볼'],
+    createdAt: daysAgo(38),
+    updatedAt: daysAgo(38),
+  },
+];

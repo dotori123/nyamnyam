@@ -1,0 +1,48 @@
+@use '../../styles/tokens' as t;
+@use '../../styles/mixins' as m;
+
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  max-width: t.$app-max-width;
+  margin: 0 auto;
+  background: var(--bg);
+
+  @include m.md {
+    border-inline: 1px solid var(--border);
+    box-shadow: var(--shadow-lg);
+  }
+
+  &__main {
+    flex: 1;
+    padding-bottom: calc(t.$bottom-nav-height + env(safe-area-inset-bottom) + 16px);
+
+    // 본문 바로가기로 옮겨온 포커스에 테두리를 그리지 않는다 (읽는 위치만 옮기는 용도)
+    &:focus {
+      outline: none;
+    }
+  }
+
+  // 평소엔 화면 밖. Tab을 처음 눌렀을 때만 나타난다
+  &__skip {
+    // fixed라야 아래로 스크롤한 상태에서 Tab을 눌러도 화면 안에 나타난다
+    position: fixed;
+    top: 8px;
+    left: 8px;
+    z-index: 50;
+    padding: 10px 14px;
+    background: var(--surface);
+    border: 1px solid var(--primary);
+    border-radius: t.$radius-md;
+    box-shadow: var(--shadow-md);
+    font-size: 13px;
+    font-weight: 700;
+    transform: translateY(-200%);
+    transition: transform 0.15s t.$ease;
+
+    &:focus {
+      transform: translateY(0);
+    }
+  }
+}

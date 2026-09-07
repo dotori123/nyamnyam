@@ -1,0 +1,122 @@
+@use '../../styles/tokens' as t;
+
+.spend-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  &__empty {
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--text-muted);
+
+    strong {
+      font-weight: 700;
+      color: var(--text);
+    }
+  }
+
+  // 막대가 자라는 바닥. 기준선은 실선 헤어라인 한 줄
+  &__plot {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    height: 120px;
+    padding-top: 18px; // 최고치 라벨 자리
+    border-bottom: 1px solid var(--border);
+  }
+
+  &__col {
+    position: relative;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 100%;
+    min-width: 0;
+  }
+
+  &__peak {
+    position: absolute;
+    top: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  &__bar {
+    // 최대 24px을 넘지 않게 잡아 두고 남는 자리는 여백으로 둔다
+    width: 100%;
+    max-width: 24px;
+    margin: 0 auto;
+    // 바닥은 각지게, 끝만 둥글게
+    border-radius: 4px 4px 0 0;
+    // 한 계열이라 색을 나누지 않는다. 강조는 최고치에 붙은 값 라벨이 한다
+    background: var(--primary);
+    transition: height 0.25s t.$ease;
+  }
+
+  &__axis {
+    display: flex;
+    gap: 8px;
+  }
+
+  &__tick {
+    flex: 1;
+    font-size: 11px;
+    color: var(--text-muted);
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__toggle {
+    align-self: flex-start;
+    // 전역 button 리셋에는 배경·테두리가 없어서 여기서 지운다
+    padding: 4px 0;
+    background: none;
+    border: 0;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--primary-ink);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+
+    caption {
+      margin-bottom: 6px;
+      font-size: 11px;
+      color: var(--text-muted);
+      text-align: left;
+    }
+
+    th,
+    td {
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      font-weight: 500;
+    }
+
+    thead th {
+      color: var(--text-muted);
+      font-weight: 600;
+
+      // 금액 열은 머리글도 값과 같은 쪽으로
+      &:last-child {
+        text-align: right;
+      }
+    }
+
+    td {
+      text-align: right;
+    }
+  }
+}

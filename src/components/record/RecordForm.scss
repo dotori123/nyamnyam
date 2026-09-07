@@ -1,0 +1,64 @@
+@use '../../styles/tokens' as t;
+
+.record-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px 16px 24px;
+
+  &__section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: t.$radius-lg;
+  }
+
+  &__section-title {
+    font-size: 14px;
+    font-weight: 800;
+  }
+
+  &__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  &__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  &__volume {
+    display: grid;
+    grid-template-columns: 1fr 74px;
+    gap: 6px;
+  }
+
+  &__unit {
+    padding-inline: 10px 26px;
+    background-position: right 9px center;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+
+    .btn {
+      white-space: nowrap;
+    }
+
+    .btn--ghost {
+      flex: 0 0 auto;
+    }
+
+    .record-form__submit {
+      flex: 1;
+    }
+  }
+}
