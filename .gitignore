@@ -25,3 +25,6 @@ dist-ssr
 
 # Firebase 콘솔에서 복사한 설정 원문 (변환용 임시 파일)
 firebase-config.txt
+
+# Firebase CLI 로컬 배포 캐시 (기기마다 다르고 저장소에 있을 이유가 없다)
+.firebase/
