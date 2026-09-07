@@ -4,6 +4,7 @@ import {
   dismissMigration,
   isDismissed,
   isMigrated,
+  isUntouchedSample,
   migrateLocalToCloud,
   readLocalSnapshot,
 } from '../../storage/cloudSync';
@@ -33,7 +34,8 @@ export default function CloudSyncBanner() {
     if (!uid || isMigrated(uid) || isDismissed(uid)) return null;
 
     const snapshot = readLocalSnapshot();
-    if (snapshot.records.length === 0 && snapshot.cats.length === 0) return null;
+    // 비어 있거나 앱이 깔아 준 샘플뿐이면 물을 것도 없다 — 옮겨 봐야 계정에 샘플만 섞인다
+    if (isUntouchedSample(snapshot)) return null;
 
     return { records: snapshot.records.length, cats: snapshot.cats.length };
   }, [uid]);

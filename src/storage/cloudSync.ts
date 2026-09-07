@@ -36,6 +36,22 @@ export function readLocalSnapshot(): LocalSnapshot {
   };
 }
 
+/**
+ * 손대지 않은 샘플 데이터인지.
+ *
+ * 첫 실행에 깔리는 샘플은 **사용자가 만든 것이 아니다.** 이걸 계정으로 옮기자고 물으면,
+ * 눌렀을 때 계정에 샘플이 섞여 들어간다.
+ * (배포 주소와 개발 주소는 오리진이 달라 localStorage가 따로다. 그래서 이미 옮긴 사람도
+ *  배포본에서는 "샘플만 담긴" 배너를 다시 만나게 된다.)
+ *
+ * 샘플 id에는 mock에서 붙인 _mock_ 이 들어 있다.
+ * 사용자가 만든 기록은 createId()가 만든 임의 문자열이라 겹치지 않는다.
+ */
+export function isUntouchedSample(snapshot: LocalSnapshot): boolean {
+  const everything = [...snapshot.records, ...snapshot.cats];
+  if (everything.length === 0) return true;
+  return everything.every((item) => item.id.includes('_mock_'));
+}
 export function isMigrated(uid: string): boolean {
   try {
     return localStorage.getItem(migratedKey(uid)) === 'true';
