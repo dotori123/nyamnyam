@@ -11,6 +11,12 @@
       }
     ],
 
+    "//": [
+      "헤더는 위에서부터 첫 번째로 맞는 규칙이 적용된다. 좁은 것부터 쓴다.",
+      "주의: 헤더 매칭은 리라이트 전의 '요청 경로'로 한다.",
+      "그래서 /records/123은 index.html을 받으면서도 /index.html 규칙에 걸리지 않는다.",
+      "SPA의 모든 딥링크를 덮으려면 마지막에 ** 규칙이 있어야 한다."
+    ],
     "headers": [
       {
         "//": "파일명에 해시가 붙는 것들만 오래 캐시한다. 내용이 바뀌면 이름이 바뀐다",
@@ -18,13 +24,9 @@
         "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
       },
       {
-        "//": "index.html은 절대 캐시하지 않는다. 여기가 낡으면 새 배포를 영영 못 받는다",
-        "source": "/index.html",
-        "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
-      },
-      {
-        "//": "서비스워커도 마찬가지. 낡은 sw.js가 낡은 캐시를 계속 물고 있게 된다",
-        "source": "/sw.js",
+        "//": "나머지 전부(=index.html을 돌려주는 모든 주소, sw.js, 아이콘)는 캐시하지 않는다.",
+        "//2": "HTML이 낡으면 지워진 자산 해시를 가리켜 화면이 깨진다. 새 배포를 영영 못 받는 사고가 여기서 난다.",
+        "source": "**",
         "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
       }
     ]
