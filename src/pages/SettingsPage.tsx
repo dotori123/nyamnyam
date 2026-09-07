@@ -7,23 +7,39 @@ import BackupPanel from '../components/settings/BackupPanel';
 import AccountPanel from '../components/settings/AccountPanel';
 import { clearStoredData } from '../storage/local';
 import { clearPhotoBlobs } from '../storage/photos';
+import { deleteAllRecords } from '../firebase/records';
+import { deleteAllCats } from '../firebase/cats';
 import './SettingsPage.scss';
 
 export default function SettingsPage() {
   const { cats } = useCats();
   const { records } = useRecords();
   // Firebase 설정이 없으면 계정 섹션 자체를 감춘다 (로컬 전용 모드)
-  const { available: authAvailable } = useAuth();
+  const { available: authAvailable, user } = useAuth();
 
   /** 실수로 지우는 걸 막는 2단계 확인. 네이티브 confirm 대신 화면 안에서 묻는다 */
   const [confirming, setConfirming] = useState(false);
   const [clearing, setClearing] = useState(false);
+  const [clearError, setClearError] = useState<string | null>(null);
 
   const handleClear = async () => {
     setClearing(true);
+
+    // 로그인 중이면 화면이 보고 있는 건 계정 쪽이다. 로컬만 지우면 아무 일도 없는 것처럼 보인다
+    if (user) {
+      try {
+        await deleteAllRecords(user.uid);
+        await deleteAllCats(user.uid);
+      } catch {
+        setClearError('계정 기록을 지우지 못했어요. 연결을 확인하고 다시 시도해 주세요.');
+        setClearing(false);
+        return;
+      }
+    }
+
     clearStoredData();
     await clearPhotoBlobs();
-    // 메모리에 남은 상태까지 확실히 털어내려고 새로 띄운다 (샘플 데이터로 다시 시작)
+    // 메모리에 남은 상태까지 확실히 털어내려고 새로 띄운다
     window.location.reload();
   };
 
@@ -74,9 +90,17 @@ export default function SettingsPage() {
         {confirming ? (
           <>
             <p className="settings-page__hint settings-page__hint--warn">
-              기록 {records.length}건과 고양이 {cats.length}마리를 모두 지우고 처음 상태(샘플
-              데이터)로 되돌립니다. 되돌릴 수 없어요.
+              기록 {records.length}건과 고양이 {cats.length}마리를 <strong>완전히</strong> 지웁니다.
+              {user
+                ? ' 계정에 올라간 것과 이 기기에 남은 것 모두 지워집니다.'
+                : ' 이 기기에서 지워집니다.'}{' '}
+              샘플 데이터도 다시 나타나지 않아요. 되돌릴 수 없습니다.
             </p>
+            {clearError && (
+              <p className="settings-page__hint settings-page__hint--warn" role="alert">
+                {clearError}
+              </p>
+            )}
             <div className="settings-page__actions">
               <button
                 type="button"
@@ -99,7 +123,8 @@ export default function SettingsPage() {
         ) : (
           <>
             <p className="settings-page__hint">
-              저장된 기록·프로필·사진을 지우고 처음 상태로 되돌려요. 털색 테마는 그대로 둡니다.
+              저장된 기록·프로필·사진을 모두 지워 빈 상태로 만들어요.
+              {user && ' 계정에 올라간 기록도 함께 지워집니다.'} 털색 테마는 그대로 둡니다.
             </p>
             <button
               type="button"

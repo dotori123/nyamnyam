@@ -114,3 +114,21 @@ export async function uploadRecords(uid: string, records: FeedRecord[]): Promise
     await batch.commit();
   }
 }
+
+/**
+ * 계정의 기록을 전부 지운다 (설정 → 기록 전체 지우기).
+ *
+ * 로그인 중에는 화면이 Firestore를 보고 있어서, 로컬만 지우면
+ * 버튼을 눌러도 아무 일이 없는 것처럼 보인다.
+ */
+export async function deleteAllRecords(uid: string): Promise<void> {
+  const { firestore, db } = await load();
+  const snapshot = await firestore.getDocs(firestore.collection(db, 'users', uid, 'records'));
+
+  const docs = snapshot.docs;
+  for (let start = 0; start < docs.length; start += 400) {
+    const batch = firestore.writeBatch(db);
+    for (const document of docs.slice(start, start + 400)) batch.delete(document.ref);
+    await batch.commit();
+  }
+}

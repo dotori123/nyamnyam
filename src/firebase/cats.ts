@@ -110,3 +110,16 @@ export async function uploadCats(uid: string, cats: Cat[]): Promise<void> {
     await batch.commit();
   }
 }
+
+/** 계정의 프로필을 전부 지운다 (설정 → 기록 전체 지우기) */
+export async function deleteAllCats(uid: string): Promise<void> {
+  const { firestore, db } = await load();
+  const snapshot = await firestore.getDocs(firestore.collection(db, 'users', uid, 'cats'));
+
+  const docs = snapshot.docs;
+  for (let start = 0; start < docs.length; start += 400) {
+    const batch = firestore.writeBatch(db);
+    for (const document of docs.slice(start, start + 400)) batch.delete(document.ref);
+    await batch.commit();
+  }
+}

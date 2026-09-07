@@ -42,12 +42,19 @@ export function writeJson(key: string, value: unknown): void {
 
 /**
  * 저장된 앱 데이터를 전부 지운다 (설정 → 기록 전체 지우기).
+ *
+ * 키를 **지우지 않고 빈 배열을 쓴다.** 지워 버리면 "저장된 게 없다"가 되어
+ * 다음 실행에 샘플 데이터가 다시 깔린다 — 비우려고 누른 사람에게는 안 지워진 것과 같다.
+ * 빈 배열은 "비어 있는 상태를 사용자가 선택했다"는 뜻이라 그대로 유지된다.
+ *
  * 털색 테마는 다른 키라 남는다 — 데이터를 지운다고 앱 색까지 바뀌면 당황스럽다.
  * 사진 원본은 IndexedDB에 있어 clearPhotoBlobs가 따로 지운다.
  */
 export function clearStoredData(): void {
   try {
-    Object.values(STORAGE_KEYS).forEach((key) => localStorage.removeItem(key));
+    localStorage.setItem(STORAGE_KEYS.records, '[]');
+    localStorage.setItem(STORAGE_KEYS.cats, '[]');
+    localStorage.setItem(STORAGE_KEYS.selectedCat, 'null');
   } catch {
     // 접근이 막혀 있으면 애초에 저장된 것도 없다
   }
