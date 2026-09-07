@@ -6,7 +6,8 @@
 
 - **스택**: React 19 + TypeScript + SCSS, Vite
 - **현재 단계**: 구글 로그인 + **Firestore 동기화**. 로그인하지 않으면 이 기기에만 저장
-- **예정**: 사진 Storage 업로드, Firebase Hosting + GitHub Actions 배포
+- **배포**: https://nyamnyam-1fe27.web.app (Firebase Hosting)
+- **예정**: 사진 Storage 업로드
 
 ## 실행
 
@@ -17,6 +18,7 @@ npm run build    # tsc -b && vite build (PWA 매니페스트/서비스워커 포
 npm run preview
 npm run lint
 npm run icons    # PWA 아이콘 PNG 재생성
+npm run deploy   # 빌드 + Firebase Hosting·Firestore 규칙 배포
 ```
 
 ## 폴더 구조
@@ -323,3 +325,33 @@ firebase가 들어오면서 첫 화면 번들이 285KB → 858KB로 뛰었습니
 
 `src/firebase/README.md`에 순서와 문서 구조를 정리해뒀습니다.
 `RecordsProvider` / `CatsProvider`의 내부 구현만 교체하면 화면 코드는 수정할 필요가 없습니다.
+
+## 배포
+
+```
+npm run deploy
+```
+
+빌드 후 Hosting과 Firestore 규칙을 함께 올립니다 (`firebase.json`의 대상).
+규칙은 **저장소의 `firestore.rules`가 단일 출처**입니다 — 콘솔에서 직접 고치면
+다음 배포 때 파일 내용으로 덮여 씁니다.
+
+### 캐시 헤더 — 배포 사고가 나는 지점
+
+| 경로 | Cache-Control | 왜 |
+| --- | --- | --- |
+| `/assets/**` | `max-age=31536000, immutable` | 파일명에 해시가 붙어 내용이 바뀌면 이름이 바뀐다 |
+| 그 외 전부 | `no-cache` | HTML·서비스워커가 낡으면 **이미 지워진 자산 해시를 가리켜 화면이 깨진다** |
+
+두 가지를 실제 응답 헤더로 확인하고 정했습니다.
+
+1. **헤더는 '마지막에 맞는 규칙'이 이긴다.** 좁은 규칙을 먼저 두면 넓은 `**`가 덮어씁니다.
+   그래서 `**`를 먼저, `/assets/**`를 나중에 둡니다.
+2. **헤더 매칭은 리라이트 *전*의 요청 경로로 한다.** `/records/123`은 `index.html`을
+   받으면서도 `/index.html` 규칙에 걸리지 않습니다. SPA 딥링크를 덮으려면 `**`가 필요합니다.
+
+### 자동 배포 (선택)
+
+`firebase init hosting:github` 를 실행하면 서비스 계정과 GitHub 시크릿을 만들고
+워크플로 파일까지 써 줍니다. 브라우저 인증이 필요한 대화형 명령입니다.
+혼자 쓰는 앱이면 `npm run deploy` 한 줄로 충분해서 아직 붙이지 않았습니다.
