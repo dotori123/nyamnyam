@@ -1,6 +1,7 @@
 import type { Cat, FeedRecord, Photo } from '../types';
 import { readArray, STORAGE_KEYS, writeJson } from './local';
 import { dehydratePhoto, readAllPhotoBlobs, writePhotoBlobs } from './photos';
+import { isSampleOnly } from './sample';
 
 /**
  * 백업 파일 내보내기 / 가져오기.
@@ -35,6 +36,13 @@ export interface BackupSummary {
   photos: number;
   /** 파일 크기(바이트). 내보내기 전에 대략을 보여줄 때도 쓴다 */
   bytes: number;
+  /**
+   * 아직 앱이 깔아 준 샘플뿐인지.
+   *
+   * 샘플은 지켜야 할 기록이 아니라서 이때는 백업을 권하지 않는다 —
+   * 첫 화면에서 "10건이나 쌓였으니 지켜라"고 재촉받는 일이 없게.
+   */
+  sampleOnly: boolean;
 }
 
 // ── 내보내기 ──────────────────────────────────
@@ -85,7 +93,13 @@ export async function estimateBackupSize(): Promise<BackupSummary> {
   }
 
   const textBytes = JSON.stringify({ cats, records }).length;
-  return { cats: cats.length, records: records.length, photos: photoCount, bytes: textBytes + photoBytes };
+  return {
+    cats: cats.length,
+    records: records.length,
+    photos: photoCount,
+    bytes: textBytes + photoBytes,
+    sampleOnly: isSampleOnly(records, cats),
+  };
 }
 
 export function backupFileName(): string {

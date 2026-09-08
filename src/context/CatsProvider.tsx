@@ -62,7 +62,7 @@ export function CatsProvider({ children }: { children: ReactNode }) {
     return subscribeCats(
       uid,
       (next) => {
-        void hydrateAll(next).then((cats) => setCloud({ uid, cats, error: null }));
+        void hydrateAll(next, uid).then((cats) => setCloud({ uid, cats, error: null }));
       },
       () =>
         setCloud((prev) => ({
@@ -173,6 +173,8 @@ export function CatsProvider({ children }: { children: ReactNode }) {
   return <CatsContext.Provider value={value}>{children}</CatsContext.Provider>;
 }
 
-function hydrateAll(cats: Cat[]): Promise<Cat[]> {
-  return Promise.all(cats.map(async (cat) => ({ ...cat, photo: await hydratePhoto(cat.photo) })));
+function hydrateAll(cats: Cat[], uid?: string | null): Promise<Cat[]> {
+  return Promise.all(
+    cats.map(async (cat) => ({ ...cat, photo: await hydratePhoto(cat.photo, uid) })),
+  );
 }

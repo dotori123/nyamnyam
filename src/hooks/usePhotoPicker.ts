@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Photo } from '../types';
 import { createId } from '../utils/id';
-import { shrinkImage } from '../utils/image';
+import { blobToDataUrl, shrinkImage, shrinkToBytes } from '../utils/image';
 import { putPhotoBlob } from '../storage/photos';
+import { MAX_PHOTO_DATA_LENGTH, uploadPhoto } from '../firebase/photos';
+import { useAuth } from './useAuth';
 
 export const MAX_PHOTOS = 5;
 /** 고양이 프로필처럼 사진이 1장만 필요한 화면에서 쓴다 */
@@ -13,6 +15,7 @@ export const MAX_PROFILE_PHOTOS = 1;
  *
  * 화면에 쓰는 주소는 URL.createObjectURL()이 만든 blob URL이고,
  * 파일은 고르는 즉시 화면용 크기로 줄여서(utils/image.ts) IndexedDB에 넣어 둔다.
+ * 로그인 상태면 계정에도 올려서 다른 기기에서도 보이게 한다.
  * blob URL은 탭을 닫으면 죽지만 저장해 둔 사진이 남아 다음에 열 때 되살아난다.
  *
  * 미리보기와 저장본이 같은 Blob이라, 화면에서 괜찮아 보이면 저장된 것도 괜찮다.
@@ -30,6 +33,9 @@ export const MAX_PROFILE_PHOTOS = 1;
  * @param max           최대 장수 (프로필 사진은 1장)
  */
 export function usePhotoPicker(initialPhotos: Photo[] = [], max: number = MAX_PHOTOS) {
+  const { user } = useAuth();
+  const uid = user?.uid ?? null;
+
   const [photos, setPhotos] = useState<Photo[]>(initialPhotos);
 
   /** 이 훅이 만들었고 아직 소유 중인 blob URL. 여기 남은 것만 회수 대상 */
@@ -68,6 +74,8 @@ export function usePhotoPicker(initialPhotos: Photo[] = [], max: number = MAX_PH
           const id = createId('photo');
           // 저장해 둬야 새로고침 후에도 사진이 보인다
           putPhotoBlob(id, blob);
+          // 로그인했으면 계정에도. 실패해도 이 기기에는 남으므로 저장을 막지 않는다
+          if (uid) void uploadToCloud(uid, id, blob);
 
           const next = [
             ...photosRef.current,
@@ -80,7 +88,7 @@ export function usePhotoPicker(initialPhotos: Photo[] = [], max: number = MAX_PH
         setBusy(false);
       }
     },
-    [max],
+    [max, uid],
   );
 
   const removePhoto = useCallback((id: string) => {
@@ -117,4 +125,23 @@ export function usePhotoPicker(initialPhotos: Photo[] = [], max: number = MAX_PH
     max,
     isFull: photos.length >= max,
   };
+}
+
+/**
+ * 계정에 사진 올리기.
+ *
+ * Firestore 문서는 1MiB가 한도라, 넘으면 한 번 더 줄여서 맞춘다.
+ * 그래도 안 맞으면 포기한다 — 이 기기에는 이미 저장돼 있고,
+ * 사진 한 장 때문에 기록 저장을 막을 이유는 없다.
+ */
+async function uploadToCloud(uid: string, id: string, blob: Blob): Promise<void> {
+  try {
+    // base64는 원본의 약 4/3이라 한도를 바이트로 환산해 둔다
+    const fitted = await shrinkToBytes(blob, Math.floor(MAX_PHOTO_DATA_LENGTH * 0.72));
+    if (!fitted) return;
+
+    await uploadPhoto(uid, id, await blobToDataUrl(fitted));
+  } catch {
+    // 네트워크·용량 문제. 다음에 이 기기에서 열면 그대로 보인다
+  }
 }

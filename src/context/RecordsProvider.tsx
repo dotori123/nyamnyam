@@ -60,7 +60,7 @@ export function RecordsProvider({ children }: { children: ReactNode }) {
       uid,
       (next) => {
         // 사진 원본이 이 기기에 있으면 되살린다 (다른 기기에서 올린 기록은 사진 없이 온다)
-        void hydrateAll(next).then((records) => setCloud({ uid, records, error: null }));
+        void hydrateAll(next, uid).then((records) => setCloud({ uid, records, error: null }));
       },
       () =>
         setCloud((prev) => ({
@@ -181,8 +181,8 @@ export function RecordsProvider({ children }: { children: ReactNode }) {
   return <RecordsContext.Provider value={value}>{children}</RecordsContext.Provider>;
 }
 
-function hydrateAll(records: FeedRecord[]): Promise<FeedRecord[]> {
+function hydrateAll(records: FeedRecord[], uid?: string | null): Promise<FeedRecord[]> {
   return Promise.all(
-    records.map(async (record) => ({ ...record, photos: await hydratePhotos(record.photos) })),
+    records.map(async (record) => ({ ...record, photos: await hydratePhotos(record.photos, uid) })),
   );
 }

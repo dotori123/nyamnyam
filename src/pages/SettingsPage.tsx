@@ -6,9 +6,11 @@ import ThemePicker from '../components/settings/ThemePicker';
 import BackupPanel from '../components/settings/BackupPanel';
 import AccountPanel from '../components/settings/AccountPanel';
 import { clearStoredData } from '../storage/local';
+import { isSampleOnly } from '../storage/sample';
 import { clearPhotoBlobs } from '../storage/photos';
 import { deleteAllRecords } from '../firebase/records';
 import { deleteAllCats } from '../firebase/cats';
+import { deleteAllPhotos } from '../firebase/photos';
 import './SettingsPage.scss';
 
 export default function SettingsPage() {
@@ -16,6 +18,9 @@ export default function SettingsPage() {
   const { records } = useRecords();
   // Firebase 설정이 없으면 계정 섹션 자체를 감춘다 (로컬 전용 모드)
   const { available: authAvailable, user } = useAuth();
+
+  /** 앱이 깔아 둔 예시뿐이면 지킬 기록이 없다 — 백업하라고 재촉하지 않는다 */
+  const sampleOnly = isSampleOnly(records, cats);
 
   /** 실수로 지우는 걸 막는 2단계 확인. 네이티브 confirm 대신 화면 안에서 묻는다 */
   const [confirming, setConfirming] = useState(false);
@@ -30,6 +35,7 @@ export default function SettingsPage() {
       try {
         await deleteAllRecords(user.uid);
         await deleteAllCats(user.uid);
+        await deleteAllPhotos(user.uid);
       } catch {
         setClearError('계정 기록을 지우지 못했어요. 연결을 확인하고 다시 시도해 주세요.');
         setClearing(false);
@@ -75,7 +81,12 @@ export default function SettingsPage() {
         <p className="settings-page__hint">
           기록과 사진은 이 기기의 브라우저에 저장돼요. 아직 계정 동기화는 없어서
           다른 기기에서는 보이지 않고, 브라우저 저장소를 비우면 함께 사라집니다.
-          아래 <strong>백업</strong>으로 파일에 담아 두면 안전해요.
+          {!sampleOnly && (
+            <>
+              {' '}
+              아래 <strong>백업</strong>으로 파일에 담아 두면 안전해요.
+            </>
+          )}
         </p>
       </section>
 

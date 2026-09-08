@@ -117,14 +117,23 @@ export default function BackupPanel() {
         </>
       ) : (
         <>
-          <p className="backup-panel__meta">
-            {summary
-              ? `기록 ${summary.records}건 · 고양이 ${summary.cats}마리 · 사진 ${summary.photos}장 · 약 ${formatBytes(summary.bytes)}`
-              : '내보낼 내용을 확인하는 중이에요…'}
-          </p>
-          <p className="settings-page__hint">
-            사진까지 파일 하나에 담아요. 다른 기기나 새 브라우저에서 이 파일로 되돌릴 수 있어요.
-          </p>
+          {summary?.sampleOnly ? (
+            <p className="settings-page__hint">
+              지금 있는 기록 {summary.records}건 · 고양이 {summary.cats}마리는 앱이 처음에 깔아 둔{' '}
+              <strong>예시</strong>예요. 직접 남긴 기록이 생기면 그때 챙기면 돼요.
+            </p>
+          ) : (
+            <>
+              <p className="backup-panel__meta">
+                {summary
+                  ? `기록 ${summary.records}건 · 고양이 ${summary.cats}마리 · 사진 ${summary.photos}장 · 약 ${formatBytes(summary.bytes)}`
+                  : '내보낼 내용을 확인하는 중이에요…'}
+              </p>
+              <p className="settings-page__hint">
+                사진까지 파일 하나에 담아요. 다른 기기나 새 브라우저에서 이 파일로 되돌릴 수 있어요.
+              </p>
+            </>
+          )}
 
           <input
             ref={fileInputRef}

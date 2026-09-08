@@ -5,6 +5,7 @@ import BottomNav from './BottomNav';
 import CloudSyncBanner from './CloudSyncBanner';
 import { useAuth } from '../../hooks/useAuth';
 import { useStoredPhotoGc } from '../../hooks/useStoredPhotoGc';
+import { usePhotoBackfill } from '../../hooks/usePhotoBackfill';
 import { useDocumentTitle } from '../../hooks/useDocumentTitle';
 import { useRouteFocus } from '../../hooks/useRouteFocus';
 import './AppLayout.scss';
@@ -12,6 +13,8 @@ import './AppLayout.scss';
 export default function AppLayout() {
   // 참조가 끊긴 사진 원본을 앱 시작 때 한 번 정리한다
   useStoredPhotoGc();
+  // 이 기기에만 있던 사진을 계정으로 올려 둔다 (다른 기기에서도 보이도록)
+  usePhotoBackfill();
   // SPA라 화면을 옮겨도 <title>이 그대로다. 경로에 맞춰 갱신한다
   useDocumentTitle();
   // 계정이 바뀌면 배너 상태도 처음부터 (아래 key)

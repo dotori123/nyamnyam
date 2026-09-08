@@ -125,9 +125,14 @@ const urlCache = new Map<string, string>();
 
 /**
  * 저장된 사진을 화면에 쓸 수 있게 되살린다.
- * 원본이 없으면(다른 기기, 브라우저가 저장소를 비운 경우) 조용히 버린다 — 깨진 이미지보다 낫다.
+ *
+ * 찾는 순서: 이번 세션 캐시 → 이 기기(IndexedDB) → 계정(Firestore).
+ * 계정에서 받아온 것은 이 기기에 캐시해 둔다. 다음부터는 네트워크를 타지 않는다.
+ * 세 군데 다 없으면 조용히 버린다 — 깨진 이미지보다 낫다.
+ *
+ * @param uid 로그인했으면 계정 id. 없으면 이 기기까지만 찾는다
  */
-export async function hydratePhotos(photos: Photo[]): Promise<Photo[]> {
+export async function hydratePhotos(photos: Photo[], uid?: string | null): Promise<Photo[]> {
   const restored: Photo[] = [];
 
   for (const photo of photos) {
@@ -142,7 +147,14 @@ export async function hydratePhotos(photos: Photo[]): Promise<Photo[]> {
       continue;
     }
 
-    const blob = await getPhotoBlob(photo.id);
+    let blob = await getPhotoBlob(photo.id);
+
+    // 이 기기에 없으면 계정에서 (다른 기기에서 올린 사진)
+    if (!blob && uid) {
+      blob = await downloadPhoto(uid, photo.id);
+      if (blob) putPhotoBlob(photo.id, blob);
+    }
+
     if (blob) {
       const url = URL.createObjectURL(blob);
       urlCache.set(photo.id, url);
@@ -153,10 +165,24 @@ export async function hydratePhotos(photos: Photo[]): Promise<Photo[]> {
   return restored;
 }
 
+/** 계정에서 사진 한 장 받아 Blob으로. 실패하면 null (사진 하나 때문에 화면이 멈추면 안 된다) */
+async function downloadPhoto(uid: string, id: string): Promise<Blob | null> {
+  try {
+    const { fetchPhoto } = await import('../firebase/photos');
+    const dataUrl = await fetchPhoto(uid, id);
+    if (!dataUrl) return null;
+
+    const response = await fetch(dataUrl);
+    return await response.blob();
+  } catch {
+    return null;
+  }
+}
+
 /** 프로필 사진처럼 1장짜리용 */
-export async function hydratePhoto(photo: Photo | null): Promise<Photo | null> {
+export async function hydratePhoto(photo: Photo | null, uid?: string | null): Promise<Photo | null> {
   if (!photo) return null;
-  const [restored] = await hydratePhotos([photo]);
+  const [restored] = await hydratePhotos([photo], uid);
   return restored ?? null;
 }
 

@@ -49,7 +49,7 @@ export async function shrinkImage(file: File): Promise<Blob> {
  * 아이폰 사진은 센서 방향 그대로 저장되고 회전은 EXIF에만 적혀 있어서,
  * 이걸 빼먹으면 캔버스에 그리는 순간 옆으로 누운 사진이 된다.
  */
-async function decode(file: File): Promise<ImageBitmap | null> {
+async function decode(file: Blob): Promise<ImageBitmap | null> {
   try {
     return await createImageBitmap(file, { imageOrientation: 'from-image' });
   } catch {
@@ -60,4 +60,55 @@ async function decode(file: File): Promise<ImageBitmap | null> {
       return null;
     }
   }
+}
+
+/**
+ * 정해진 바이트 수 안에 들어오도록 한 번 더 줄인다.
+ *
+ * Firestore 문서는 1MiB가 한도라 사진을 base64로 담으려면 원본이 700KB 남짓이어야 한다.
+ * 저장용 축소(긴 변 1600px)를 거쳤어도 결이 복잡한 사진은 이 선을 넘을 수 있어서,
+ * 화질을 조금씩 낮춰 가며 맞춘다. 끝내 못 맞추면 null — 그 사진은 이 기기에만 남는다.
+ */
+export async function shrinkToBytes(blob: Blob, maxBytes: number): Promise<Blob | null> {
+  if (blob.size <= maxBytes) return blob;
+
+  const bitmap = await decode(blob);
+  if (!bitmap) return null;
+
+  try {
+    // 화질을 먼저 낮추고, 그래도 안 되면 크기를 줄인다 (해상도보다 화질이 덜 아쉽다)
+    for (const [maxEdge, quality] of [
+      [1600, 0.7],
+      [1280, 0.65],
+      [1024, 0.6],
+      [800, 0.55],
+    ] as const) {
+      const scale = Math.min(1, maxEdge / Math.max(bitmap.width, bitmap.height));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(bitmap.width * scale);
+      canvas.height = Math.round(bitmap.height * scale);
+
+      const context = canvas.getContext('2d');
+      if (!context) return null;
+      context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+
+      const candidate = await new Promise<Blob | null>((resolve) => {
+        canvas.toBlob(resolve, 'image/jpeg', quality);
+      });
+      if (candidate && candidate.size <= maxBytes) return candidate;
+    }
+    return null;
+  } finally {
+    bitmap.close();
+  }
+}
+
+/** Blob → data URL. 업로드용 */
+export function blobToDataUrl(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result));
+    reader.onerror = () => reject(new Error('사진을 읽지 못했어요.'));
+    reader.readAsDataURL(blob);
+  });
 }
