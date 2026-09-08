@@ -62,10 +62,16 @@ export async function createCat(uid: string, id: string, input: NewCat): Promise
   );
 }
 
+/** 부분 갱신. records.ts와 같은 이유로 사진을 직접 눕힌다 (updateDoc은 변환기를 타지 않는다) */
 export async function patchCat(uid: string, id: string, patch: Partial<NewCat>): Promise<void> {
-  const { firestore, db } = await load();
+  const [{ firestore, db }, { toStoredPhoto }] = await Promise.all([
+    load(),
+    import('./converters'),
+  ]);
+
   await firestore.updateDoc(firestore.doc(db, 'users', uid, 'cats', id), {
     ...patch,
+    ...('photo' in patch ? { photo: patch.photo ? toStoredPhoto(patch.photo) : null } : {}),
     updatedAt: firestore.serverTimestamp(),
   });
 }

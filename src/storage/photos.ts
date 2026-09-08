@@ -97,9 +97,21 @@ export function dehydratePhoto(photo: Photo): Photo {
   return photo.url.startsWith('blob:') ? { ...photo, url: '' } : photo;
 }
 
-/** hydrate가 필요한 사진(=url이 빈 사진)이 하나라도 있는지 */
+/**
+ * 이 주소를 화면에 그대로 쓸 수 있는지.
+ *
+ * blob: 주소는 **저장소에서 온 순간 이미 죽은 주소**다. 살아 있는 blob 주소는
+ * 이번 세션의 메모리에만 있고, 어딘가에 저장돼 돌아온 것은 지난 세션의 잔해다.
+ * (한동안 수정 경로가 이 주소를 Firestore에 그대로 저장하는 버그가 있었다.
+ *  그 데이터가 남아 있어도 여기서 걸러 다시 살려낸다.)
+ */
+function isUsableUrl(url: string): boolean {
+  return url.length > 0 && !url.startsWith('blob:');
+}
+
+/** hydrate가 필요한 사진(=쓸 수 없는 주소를 가진 사진)이 하나라도 있는지 */
 export function needsHydration(photos: Photo[]): boolean {
-  return photos.some((photo) => !photo.url);
+  return photos.some((photo) => !isUsableUrl(photo.url));
 }
 
 /**
@@ -119,7 +131,7 @@ export async function hydratePhotos(photos: Photo[]): Promise<Photo[]> {
   const restored: Photo[] = [];
 
   for (const photo of photos) {
-    if (photo.url) {
+    if (isUsableUrl(photo.url)) {
       restored.push(photo);
       continue;
     }

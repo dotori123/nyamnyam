@@ -79,16 +79,25 @@ export async function createRecord(uid: string, id: string, input: NewFeedRecord
   );
 }
 
+/**
+ * 부분 갱신.
+ *
+ * updateDoc은 변환기를 타지 않는다. 그래서 **사진은 여기서 직접 눕혀야 한다** —
+ * 빼먹으면 화면용 blob: 주소가 그대로 저장되고, 다음에 열 때 깨진 이미지가 된다.
+ */
 export async function patchRecord(
   uid: string,
   id: string,
   patch: Partial<NewFeedRecord>,
 ): Promise<void> {
-  const { firestore, db } = await load();
+  const [{ firestore, db }, { toStoredPhoto }] = await Promise.all([
+    load(),
+    import('./converters'),
+  ]);
 
-  // 변환기를 거치지 않는 부분 갱신이라 시간만 서버 값으로 직접 넣는다
   await firestore.updateDoc(firestore.doc(db, 'users', uid, 'records', id), {
     ...patch,
+    ...(patch.photos ? { photos: patch.photos.map(toStoredPhoto) } : {}),
     updatedAt: firestore.serverTimestamp(),
   });
 }

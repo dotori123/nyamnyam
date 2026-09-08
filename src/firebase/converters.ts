@@ -21,8 +21,13 @@ import type { Cat, FeedRecord, Photo } from '../types';
  *   → 다른 기기에서 열면 사진만 빠진 기록이 보인다. 이건 Storage를 붙이면 해결된다.
  */
 
-/** 저장용으로 사진을 눕힌다. 화면용 주소(blob:)는 이 기기 밖에서 의미가 없다 */
-function toStoredPhoto(photo: Photo) {
+/**
+ * 저장용으로 사진을 눕힌다. 화면용 주소(blob:)는 이 기기 밖에서 의미가 없다.
+ *
+ * **부분 갱신(updateDoc)에서도 반드시 거쳐야 한다.** 변환기는 setDoc에만 걸려서,
+ * 수정 경로가 이걸 빼먹으면 blob: 주소가 그대로 저장되고 다음에 열 때 깨진 이미지가 된다.
+ */
+export function toStoredPhoto(photo: Photo) {
   return {
     id: photo.id,
     url: photo.url.startsWith('data:') ? photo.url : '',
