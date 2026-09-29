@@ -9,6 +9,7 @@ import CatFormPage from './pages/CatFormPage';
 import CatDetailPage from './pages/CatDetailPage';
 import SettingsPage from './pages/SettingsPage';
 import NotFoundPage from './pages/NotFoundPage';
+import ImportPage from './pages/ImportPage';
 import LandingPage from './pages/landing/LandingPage';
 import { useStarted } from './storage/firstVisit';
 
@@ -24,6 +25,7 @@ export default function App() {
       <Route element={<AppLayout />}>
         {started && <Route path="/" element={<RecordListPage />} />}
         <Route path="/new" element={<RecordFormPage />} />
+        <Route path="/import" element={<ImportPage />} />
         <Route path="/records/:id" element={<RecordDetailPage />} />
         <Route path="/records/:id/edit" element={<RecordFormPage />} />
         <Route path="/stats" element={<StatsPage />} />

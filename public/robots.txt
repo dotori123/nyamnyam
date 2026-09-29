@@ -7,6 +7,7 @@ Allow: /llms.txt
 Disallow: /records/
 Disallow: /cats
 Disallow: /new
+Disallow: /import
 Disallow: /stats
 Disallow: /settings
 

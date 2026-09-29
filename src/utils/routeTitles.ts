@@ -23,6 +23,7 @@ const ROUTE_TITLES: RouteTitle[] = [
 
   // 아래는 뒤로가기가 필요한 화면들. 순서가 곧 우선순위다
   { match: /^\/new$/, title: '기록 등록', sub: true },
+  { match: /^\/import$/, title: '주문내역 붙여넣기', sub: true },
   { match: /^\/records\/[^/]+\/edit$/, title: '기록 수정', sub: true },
   { match: /^\/records\/[^/]+$/, title: '기록 상세', sub: true },
   { match: /^\/cats\/new$/, title: '고양이 등록', sub: true },

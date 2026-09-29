@@ -1,4 +1,5 @@
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import Icon from '../components/common/Icon';
 import type { NewFeedRecord } from '../types';
 import { useRecords } from '../hooks/useRecords';
 import RecordForm from '../components/record/RecordForm';
@@ -71,6 +72,16 @@ export default function RecordFormPage() {
 
   return (
     <>
+      {/* 한꺼번에 산 사료는 주문내역을 붙여 넣는 편이 빠르다. 새로 쓸 때만 권한다 */}
+      {!editing && !source && (
+        <Link to="/import" className="record-form-page__import">
+          <Icon name="upload" />
+          <span>
+            <strong>여러 개를 한 번에 샀나요?</strong>
+            주문내역을 붙여 넣으면 한꺼번에 등록돼요
+          </span>
+        </Link>
+      )}
       {source && (
         <p className="record-form-page__notice">
           <strong>{source.productName}</strong> · 같은 제품으로 새 기록을 만들어요. 평가와 사진,

@@ -1,0 +1,134 @@
+@use '../styles/tokens' as t;
+
+.import-page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px 16px 32px;
+
+  &__intro {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 14px;
+    line-height: 1.6;
+
+    strong {
+      font-weight: 700;
+    }
+  }
+
+  &__private {
+    color: var(--text-muted);
+    font-size: 12px;
+  }
+
+  &__text {
+    min-height: 140px;
+    font-size: 13px;
+  }
+
+  &__found {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+
+  &__rows {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  // 등록 버튼은 목록이 길어도 손 닿는 곳에 붙어 있게
+  &__submit {
+    position: sticky;
+    bottom: calc(t.$bottom-nav-height + env(safe-area-inset-bottom) + 8px);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--border);
+    border-radius: t.$radius-lg;
+  }
+}
+
+.import-row {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: t.$radius-lg;
+  transition: opacity 0.15s t.$ease;
+
+  // 뺀 줄은 흐리게 — 무엇이 빠지는지 보이도록 지우지는 않는다
+  &--off {
+    opacity: 0.55;
+  }
+
+  &__pick {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    cursor: pointer;
+
+    input {
+      flex: 0 0 auto;
+      width: 18px;
+      height: 18px;
+      margin-top: 1px;
+      accent-color: var(--primary-ink);
+    }
+  }
+
+  &__title {
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+
+  &__warn {
+    color: var(--warn);
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  &__fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+
+    span {
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .input,
+    .select {
+      padding: 8px 10px;
+      font-size: 14px;
+    }
+
+    .select {
+      padding-right: 30px;
+      background-position: right 10px center;
+    }
+  }
+
+  &__meta {
+    color: var(--text-muted);
+    font-size: 12px;
+  }
+}
