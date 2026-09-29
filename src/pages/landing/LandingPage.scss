@@ -8,6 +8,8 @@
 // 색은 전부 테마 변수라 5개 테마 × 라이트/다크에서 대비가 유지된다.
 
 $landing-max: 1080px;
+/// 살짝 넘쳤다가 돌아오는 탄성 — 스티커·아이콘 전용
+$spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 
 .landing {
   min-height: 100dvh;
@@ -96,6 +98,19 @@ $landing-max: 1080px;
     line-height: 1.05;
   }
 
+  // 한 줄씩 아래에서 떠오른다
+  &__title-line {
+    display: block;
+
+    @media (prefers-reduced-motion: no-preference) {
+      animation: landing-rise 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+
+      & + & {
+        animation-delay: 0.12s;
+      }
+    }
+  }
+
   // 폰과 스티커를 겹쳐 놓는 무대
   &__stage {
     position: relative;
@@ -108,10 +123,26 @@ $landing-max: 1080px;
     @include m.md {
       margin-top: 56px;
     }
+
+    // 제목 다음으로 폰이 올라온다
+    @media (prefers-reduced-motion: no-preference) {
+      animation: landing-rise 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.25s both;
+    }
   }
 
   &__phone {
+    position: relative;
+    z-index: 1;
     margin: 0;
+    // 마우스 따라 기울기 (motion.ts가 --tilt-x/--tilt-y를 바꾼다)
+    transform: perspective(1000px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+    transition: transform 0.25s ease-out;
+
+    // 마우스가 없는 휴대폰에서는 제자리에서 천천히 둥실
+    @media (hover: none) and (prefers-reduced-motion: no-preference) {
+      animation: landing-float 5s ease-in-out 1.4s infinite;
+    }
+
     width: 320px;
     // 모바일에서는 양옆에 스티커 붙일 자리를 남기려고 통째로 줄인다.
     // 폭을 줄이면 안의 카드가 좁아져 가게 이름·가격이 잘린다
@@ -201,7 +232,12 @@ $landing-max: 1080px;
   // 납작한 종이 스티커. 그림자 없이 굵은 테두리로만 떼어 낸다
   &__sticker {
     position: absolute;
-    z-index: 1;
+    z-index: 2;
+    // 기울기는 rotate 속성으로 따로 둔다. 붙는 애니메이션(scale)과 hover(rotate)가 서로 덮지 않게
+    rotate: var(--rot, 0deg);
+    transition:
+      rotate 0.4s $spring,
+      translate 0.2s t.$ease;
     padding: 5px 10px;
     border: 2px solid var(--text);
     border-radius: 10px;
@@ -222,7 +258,6 @@ $landing-max: 1080px;
       left: 0;
       background: var(--primary);
       color: var(--on-primary);
-      transform: rotate(-8deg);
     }
 
     &--hero-1 {
@@ -230,7 +265,6 @@ $landing-max: 1080px;
       right: 0;
       background: var(--text);
       color: var(--bg);
-      transform: rotate(7deg);
     }
 
     &--hero-2 {
@@ -238,7 +272,6 @@ $landing-max: 1080px;
       left: 0;
       background: var(--primary-soft);
       color: var(--primary-ink);
-      transform: rotate(5deg);
     }
 
     &--hero-3 {
@@ -246,13 +279,56 @@ $landing-max: 1080px;
       right: 0;
       background: var(--surface);
       color: var(--text);
-      transform: rotate(-6deg);
     }
 
     &--card {
+      --rot: -7deg;
       right: 14px;
       bottom: 14px;
-      transform: rotate(-7deg);
+    }
+
+    // 마우스를 올리면 반대쪽으로 휙 뒤집히며 살짝 들린다
+    @media (hover: hover) {
+      &:hover {
+        rotate: calc(var(--rot, 0deg) * -1);
+        translate: 0 -3px;
+      }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      // 첫 화면 스티커는 폰이 올라온 뒤 하나씩 뽁
+      &[class*='--hero-'] {
+        animation: landing-pop 0.5s $spring both;
+        animation-delay: calc(0.7s + var(--i, 0) * 0.15s);
+      }
+    }
+  }
+
+  // ── 폰 뒤로 떨어지는 사료 조각 ────────
+  &__falling {
+    position: absolute;
+    inset: -40px 0 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  &__falling-piece {
+    position: absolute;
+    top: 0;
+    color: var(--primary);
+    opacity: 0;
+
+    &:nth-child(3n + 2) {
+      color: var(--primary-ink);
+    }
+
+    &:nth-child(3n) {
+      color: var(--text-faint);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      animation: landing-fall var(--duration, 8s) linear var(--delay, 0s) infinite;
     }
   }
 
@@ -322,6 +398,20 @@ $landing-max: 1080px;
         background: var(--surface);
         color: var(--text);
       }
+    }
+  }
+
+  // 카드에 마우스를 올리면 그림 칸 아이콘이 까딱
+  &__card-art > .icon {
+    transition:
+      translate 0.3s $spring,
+      rotate 0.3s $spring;
+  }
+
+  @media (hover: hover) {
+    &__card:hover &__card-art > .icon {
+      translate: 0 -8px;
+      rotate: -8deg;
     }
   }
 
@@ -419,5 +509,89 @@ $landing-max: 1080px;
     color: var(--text-faint);
     font-size: 12px;
     text-align: center;
+  }
+
+  // ── 스크롤해 들어오면 튀어 오르기 ──────
+  // data-motion은 motion.ts가 움직임을 켜도 될 때만 붙인다.
+  // 그래서 JS가 없거나 움직임 줄이기를 켠 사람에게는 처음부터 다 보인다
+  &[data-motion='on'] [data-reveal] {
+    opacity: 0;
+    translate: 0 28px;
+    transition:
+      opacity 0.6s ease,
+      translate 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transition-delay: calc(var(--i, 0) * 90ms);
+
+    &.is-in {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+
+  // 카드 스티커는 카드가 올라온 다음에 뽁
+  &[data-motion='on'] &__card &__sticker {
+    scale: 0;
+  }
+
+  &[data-motion='on'] &__card.is-in &__sticker {
+    animation: landing-pop 0.5s $spring both;
+    animation-delay: calc(0.35s + var(--i, 0) * 90ms);
+  }
+}
+
+@keyframes landing-rise {
+  from {
+    opacity: 0;
+    translate: 0 40px;
+  }
+
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+// 스티커 붙기: 작게 시작해서 살짝 넘쳤다가 제자리
+@keyframes landing-pop {
+  from {
+    opacity: 0;
+    scale: 0.2;
+  }
+
+  60% {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+@keyframes landing-fall {
+  0% {
+    opacity: 0;
+    transform: translateY(0) rotate(0deg);
+  }
+
+  10%,
+  80% {
+    opacity: 0.85;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(640px) rotate(var(--spin, 180deg));
+  }
+}
+
+@keyframes landing-float {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+
+  50% {
+    translate: 0 -10px;
   }
 }
