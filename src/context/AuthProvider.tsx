@@ -20,7 +20,7 @@ import { AuthContext, type AppUser, type AuthContextValue } from './authContext'
  */
 
 /** 지난번 로그인 여부를 이 기기에 남겨 둔다 (다음 실행의 첫 화면 판단용) */
-const SIGNED_IN_KEY = 'nyamnyam.signedIn';
+export const SIGNED_IN_KEY = 'nyamnyam.signedIn';
 
 function readExpectsUser(): boolean {
   try {

@@ -1,4 +1,6 @@
+import { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
+import { markStarted } from '../../storage/firstVisit';
 import AppHeader from './AppHeader';
 import ScrollToTop from './ScrollToTop';
 import BottomNav from './BottomNav';
@@ -21,6 +23,10 @@ export default function AppLayout() {
   const { user } = useAuth();
   // 화면이 바뀌면 포커스도 본문으로 옮겨 준다 (스크린리더·키보드 사용자용)
   const mainRef = useRouteFocus<HTMLElement>();
+
+  // 앱 화면을 한 번이라도 열었으면 그다음부터 / 는 소개가 아니라 기록 목록이다.
+  // 공유 링크로 /stats 같은 화면에 먼저 들어온 사람이 '기록' 탭을 눌러도 소개로 튕기지 않게.
+  useEffect(markStarted, []);
 
   return (
     <div className="app-shell">

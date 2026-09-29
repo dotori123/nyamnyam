@@ -1,11 +1,28 @@
-import { defineConfig } from 'vite';
+import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
+import { landingFaqJsonLd, landingStaticHtml } from './src/pages/landing/staticHtml.ts';
+
+/**
+ * 소개 화면 문구를 index.html에 정적 HTML로 박아 넣는다.
+ * JS를 실행하지 않는 크롤러도 읽을 수 있게 — 문구 원본은 src/pages/landing/content.ts.
+ */
+function landingStatic(): Plugin {
+  return {
+    name: 'nyamnyam-landing-static',
+    transformIndexHtml(html) {
+      return html
+        .replace('<!--landing-static-->', landingStaticHtml())
+        .replace('<!--landing-faq-->', landingFaqJsonLd());
+    },
+  };
+}
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
     react(),
+    landingStatic(),
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'apple-touch-icon.png'],

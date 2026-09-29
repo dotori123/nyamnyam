@@ -9,12 +9,18 @@ import CatFormPage from './pages/CatFormPage';
 import CatDetailPage from './pages/CatDetailPage';
 import SettingsPage from './pages/SettingsPage';
 import NotFoundPage from './pages/NotFoundPage';
+import LandingPage from './pages/landing/LandingPage';
+import { useStarted } from './storage/firstVisit';
 
 export default function App() {
+  // 처음 온 사람의 / 는 소개 화면이다. 앱을 한 번 쓰면 같은 주소가 기록 목록이 된다 (storage/firstVisit.ts)
+  const started = useStarted();
+
   return (
     <Routes>
+      {!started && <Route path="/" element={<LandingPage />} />}
       <Route element={<AppLayout />}>
-        <Route path="/" element={<RecordListPage />} />
+        {started && <Route path="/" element={<RecordListPage />} />}
         <Route path="/new" element={<RecordFormPage />} />
         <Route path="/records/:id" element={<RecordDetailPage />} />
         <Route path="/records/:id/edit" element={<RecordFormPage />} />

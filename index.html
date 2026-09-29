@@ -53,6 +53,7 @@
         ]
       }
     </script>
+    <script type="application/ld+json"><!--landing-faq--></script>
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -184,44 +185,12 @@
     </div>
 
     <!--
-      #root 안의 소개는 JS를 실행하지 않는 크롤러(대부분의 AI 크롤러)와 JS가 꺼진 브라우저를 위한 것이다.
-      React가 마운트되면 이 내용을 통째로 갈아끼우고, 그 전까지는 스플래시가 덮고 있어 사용자에게는 보이지 않는다.
-      앱 기능이 바뀌면 여기와 public/llms.txt, 위 JSON-LD를 함께 고친다.
+      #root 안에는 빌드 때 소개 화면의 정적 HTML이 들어간다 (vite.config.ts의 landingStatic 플러그인).
+      JS를 실행하지 않는 크롤러(대부분의 AI 크롤러)와 JS가 꺼진 브라우저를 위한 것이다.
+      React가 마운트되면 통째로 갈아끼우고, 그 전까지는 스플래시가 덮고 있어 사용자에게는 보이지 않는다.
+      문구는 src/pages/landing/content.ts 한 곳에서 고친다.
     -->
-    <div id="root">
-      <main class="seo-intro">
-        <h1>냥냠냠 · 고양이 사료 기록장</h1>
-        <p>
-          우리 고양이가 먹은 사료, 습식, 간식, 영양제를 기록하고 다시 찾아보는 무료 웹앱이에요.
-          잘 먹었는지, 배변은 괜찮았는지, 또 살지를 남겨 두면 다음에 살 사료를 고민 없이 고를 수 있어요.
-        </p>
-
-        <h2>무엇을 기록하나요</h2>
-        <ul>
-          <li>브랜드, 제품명, 맛, 종류(건사료·습식·간식·영양제), 용량</li>
-          <li>만족도(하트 5단계), 배변 상태, 재구매 의향</li>
-          <li>가격과 구매처, 제품 사진, 메모와 태그</li>
-        </ul>
-
-        <h2>기록이 쌓이면</h2>
-        <ul>
-          <li>같은 제품을 여러 번 산 기록을 한데 모아 구매처별 가격과 최저가를 보여줘요</li>
-          <li>용량을 적으면 100g당 단가를 계산해 제품끼리 비교할 수 있어요</li>
-          <li>브랜드별 평균 만족도, 배변이 안 좋았던 사료, 최근 6개월 지출을 통계로 보여줘요</li>
-          <li>여러 마리를 키워도 고양이별로 나눠 볼 수 있어요</li>
-        </ul>
-
-        <h2>자주 묻는 질문</h2>
-        <h3>가입해야 쓸 수 있나요?</h3>
-        <p>아니요. 로그인하지 않으면 기록이 이 기기에만 저장돼요. 구글로 로그인하면 여러 기기에서 같은 기록을 볼 수 있어요.</p>
-        <h3>앱을 설치해야 하나요?</h3>
-        <p>브라우저에서 바로 쓸 수 있어요. 휴대폰 홈 화면에 추가하면 앱처럼 열려요.</p>
-        <h3>기록을 옮기거나 보관할 수 있나요?</h3>
-        <p>설정의 백업에서 사진까지 담은 파일로 내보내고, 다른 기기에서 가져올 수 있어요.</p>
-
-        <noscript><p><strong>냥냠냠은 JavaScript를 켜야 쓸 수 있어요.</strong></p></noscript>
-      </main>
-    </div>
+    <div id="root"><!--landing-static--></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

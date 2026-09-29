@@ -78,7 +78,7 @@ src/
 
 | 경로                | 화면                         |
 | ------------------- | ---------------------------- |
-| `/`                 | 기록 목록 (`?cat=<id>`로 고양이 필터 초기화) |
+| `/`                 | 처음 온 사람: 소개(랜딩) · 앱을 써 본 사람: 기록 목록 (`?cat=<id>`로 고양이 필터 초기화) |
 | `/new`              | 기록 등록 (`?copy=<기록 id>`로 같은 제품 다시 기록) |
 | `/records/:id`      | 기록 상세                    |
 | `/records/:id/edit` | 기록 수정                    |
@@ -89,6 +89,10 @@ src/
 | `/cats/:id/edit`    | 프로필 수정                  |
 | `/settings`         | 설정 · 털색 테마             |
 | `*`                 | 404                          |
+
+`/`가 소개인지 기록 목록인지는 `src/storage/firstVisit.ts`가 가른다.
+앱 화면을 한 번이라도 열었거나, 직접 만든 기록·고양이가 있거나, 로그인한 적이 있거나,
+홈 화면 앱으로 열었으면 기록 목록이다. 주소가 하나라 북마크·설치 앱(`start_url: '/'`)이 그대로 동작한다.
 
 ## 데이터 구조
 
@@ -368,13 +372,15 @@ firebase가 들어오면서 첫 화면 번들이 285KB → 858KB로 뛰었습니
 | 파일 | 역할 |
 | --- | --- |
 | `index.html` `<head>` | 설명, canonical, Open Graph·트위터 카드, JSON-LD(`WebApplication`) |
-| `index.html` `#root` 안 소개 | 크롤러·JS 꺼진 브라우저용 본문. React가 마운트되면 갈아끼운다 (스플래시가 덮고 있어 사용자에겐 안 보임) |
+| `src/pages/landing/content.ts` | 소개(랜딩) 화면 문구 원본. 화면(`LandingPage.tsx`)과 아래 정적 HTML이 함께 쓴다 |
+| `index.html` `#root` 안 소개 | 빌드 때 `vite.config.ts`의 `landingStatic` 플러그인이 `content.ts`로 채운다. 크롤러·JS 꺼진 브라우저용이고, React가 마운트되면 갈아끼운다 |
+| `index.html` FAQ JSON-LD | 같은 플러그인이 소개 화면의 자주 묻는 질문으로 채운다 |
 | `public/robots.txt` | 첫 화면만 열고, 개인 기록 주소(`/records`, `/cats` …)는 막는다 |
 | `public/sitemap.xml` | 첫 화면 |
 | `public/llms.txt` | AI가 읽는 앱 요약 (한글이라 `firebase.json`에서 charset을 붙인다) |
 | `public/og-image.png` | 링크 미리보기 이미지. 원본은 `scripts/og/og-image.html`, `npm run og`로 다시 찍는다 |
 
-- **기능이 바뀌면** 소개 본문, JSON-LD의 `featureList`, `llms.txt`를 함께 고친다. 셋이 어긋나면 검색엔진이 신뢰도를 낮춘다.
+- **기능이 바뀌면** `content.ts`, `index.html` JSON-LD의 `featureList`, `llms.txt`를 함께 고친다. 셋이 어긋나면 검색엔진이 신뢰도를 낮춘다.
 - **주소가 바뀌면**(커스텀 도메인) `index.html`, `robots.txt`, `sitemap.xml`, `llms.txt`의 `nyamnyam-1fe27.web.app`을 모두 바꾼다.
 - 서비스워커가 이 파일들까지 `index.html`로 돌려주지 않도록 `vite.config.ts`의 `navigateFallbackDenylist`에 올려 두었다.
 
