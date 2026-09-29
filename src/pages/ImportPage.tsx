@@ -4,7 +4,7 @@ import type { FeedRecord, FoodType } from '../types';
 import { useRecords } from '../hooks/useRecords';
 import { useCats } from '../hooks/useCats';
 import CatSelect from '../components/cat/CatSelect';
-import { parseNaverOrders, type ParsedOrder } from '../utils/orderImport';
+import { parseNaverOrders, totalVolume, volumeLabel, type ParsedOrder } from '../utils/orderImport';
 import { FOOD_TYPE_OPTIONS } from '../utils/options';
 import { formatPrice } from '../utils/format';
 import { fixKey, readImportFixes, saveImportFixes } from '../storage/importFixes';
@@ -14,7 +14,8 @@ import './ImportPage.scss';
  * 주문내역 붙여넣기 — 한꺼번에 산 사료를 여러 건 한 번에 등록한다 (/import).
  *
  * 1. 쇼핑몰 주문내역을 통째로 복사해 붙여 넣으면 바로 읽는다 (utils/orderImport.ts)
- * 2. 줄마다 등록할지 고르고, 짐작한 브랜드·제품명·맛·종류를 고친다
+ *    — 목록 화면과 주문 상세 화면 둘 다. 목록 화면은 수량이 없어 직접 고치게 한다
+ * 2. 줄마다 등록할지 고르고, 짐작한 브랜드·제품명·맛·종류·구매처·수량을 고친다
  * 3. 전부 "평가 전"으로 저장한다 — 산 직후라 아직 먹여 보지 않았다 (utils/review.ts)
  *
  * 고친 브랜드·제품명은 기억해 뒀다가 같은 상품을 다시 붙여 넣을 때 채운다 (storage/importFixes.ts).
@@ -53,6 +54,8 @@ export default function ImportPage() {
     setRows((prev) => prev.map((row) => (row.index === index ? { ...row, ...patch } : row)));
 
   const chosen = useMemo(() => rows.filter((row) => row.selected), [rows]);
+  // 목록 화면을 붙였다면 수량이 없다 — 2개 이상 산 상품은 단가가 틀리게 나온다
+  const quantityMissing = rows.some((row) => !row.quantityKnown);
 
   const handleSubmit = () => {
     for (const row of chosen) {
@@ -62,7 +65,8 @@ export default function ImportPage() {
         productName: row.productName.trim(),
         flavor: row.flavor.trim(),
         foodType: row.foodType,
-        volume: row.volume,
+        // 옵션 용량 × 수량. 수량을 고쳤다면 고친 값으로
+        volume: totalVolume(row),
         // 산 직후라 아직 먹여 보지 않았다
         rating: null,
         stool: 'unknown',
@@ -98,6 +102,9 @@ export default function ImportPage() {
           네이버 주문내역 화면을 <strong>통째로 복사</strong>해서 붙여 넣으세요. 상품마다 나눠서
           브랜드·용량·가격·구매일을 채워 드려요.
         </p>
+        <p className="import-page__private">
+          주문 <strong>상세보기</strong> 화면을 붙이면 수량과 가게 이름까지 들어가서 더 정확해요.
+        </p>
         <p className="import-page__private">붙여 넣은 내용은 이 기기 안에서만 읽고, 어디로도 보내지 않아요.</p>
       </section>
 
@@ -124,6 +131,13 @@ export default function ImportPage() {
           <p className="import-page__found" role="status">
             {rows.length}건을 찾았어요. 브랜드는 상품명 첫 단어로 짐작한 거라 틀릴 수 있어요.
           </p>
+
+          {quantityMissing && (
+            <p className="import-page__notice">
+              주문 목록 화면에는 <strong>수량</strong>이 안 나와서 모두 1개로 읽었어요. 2개 이상 산 상품은
+              수량을 고쳐 주세요. 주문 <strong>상세보기</strong> 화면을 붙여 넣으면 수량과 가게 이름까지 채워져요.
+            </p>
+          )}
 
           <div className="field">
             <span className="field__label">어느 아이 사료인가요?</span>
@@ -173,10 +187,27 @@ export default function ImportPage() {
                       ))}
                     </select>
                   </label>
+                  <RowInput label="구매처" value={row.store} onChange={(store) => update(row.index, { store })} />
+                  <label className="import-row__field">
+                    <span>수량</span>
+                    <input
+                      className="input"
+                      type="number"
+                      inputMode="numeric"
+                      min={1}
+                      value={row.quantity}
+                      onChange={(event) =>
+                        update(row.index, {
+                          quantity: Math.max(1, Math.floor(Number(event.target.value) || 1)),
+                          quantityKnown: true,
+                        })
+                      }
+                    />
+                  </label>
                 </div>
 
                 <p className="import-row__meta">
-                  {[row.volumeLabel, row.price === null ? null : formatPrice(row.price), shortDate(row.purchasedAt), row.store]
+                  {[volumeLabel(row), row.price === null ? null : formatPrice(row.price), shortDate(row.purchasedAt)]
                     .filter(Boolean)
                     .join(' · ')}
                 </p>
