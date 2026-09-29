@@ -14,6 +14,8 @@ $spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 .landing {
   min-height: 100dvh;
   background: var(--bg);
+  // 3D 조각 캔버스가 화면 옆으로 넘쳐도 가로 스크롤이 생기지 않게 (clip은 sticky 메뉴를 망가뜨리지 않는다)
+  overflow-x: clip;
   // 제목이 몇 글자에서 한 줄을 넘길 때 단어 중간에서 끊기지 않게
   word-break: keep-all;
 
@@ -302,6 +304,31 @@ $spring: cubic-bezier(0.34, 1.56, 0.64, 1);
         animation-delay: calc(0.7s + var(--i, 0) * 0.15s);
       }
     }
+  }
+
+  // ── 폰 둘레 3D 종이 조각 (heroScene.ts) ──
+  // 무대보다 넓게 깔아 폰 양옆 빈자리까지 쓴다. 넘친 부분은 .landing의 overflow-x: clip이 자른다
+  &__scene {
+    position: absolute;
+    top: -8%;
+    bottom: -4%;
+    left: 50%;
+    z-index: 0;
+    width: min(100vw, 1080px);
+    height: 112%;
+    translate: -50% 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+
+  &__stage[data-scene='3d'] &__scene {
+    opacity: 1;
+  }
+
+  // 3D가 떠 있으면 CSS 조각은 쉰다
+  &__stage[data-scene='3d'] &__falling {
+    display: none;
   }
 
   // ── 폰 뒤로 떨어지는 사료 조각 ────────

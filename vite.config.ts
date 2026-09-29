@@ -53,11 +53,22 @@ export default defineConfig({
         // 전부 프리캐시하면 설치 용량이 헛되이 커진다.
         // 대신 실제로 내려받은 구간만 아래 runtimeCaching으로 캐시한다.
         globPatterns: ['**/*.{js,css,html,svg,png}'],
+        // 소개 화면 3D(three.js, 약 140KB)는 앱을 쓰는 사람까지 미리 받을 이유가 없다.
+        // 소개 화면을 열 때 받고, 그때 아래 runtimeCaching이 담아 둔다
+        globIgnores: ['**/heroScene-*.js'],
         // SPA 라우팅: 캐시 미스 시 index.html로 폴백
         navigateFallback: 'index.html',
         // 크롤러용 파일은 주소창에 직접 쳐도 index.html이 아니라 파일 그대로 보여야 한다
         navigateFallbackDenylist: [/^\/(robots\.txt|sitemap\.xml|llms\.txt|og-image\.png)$/],
         runtimeCaching: [
+          {
+            urlPattern: /\/assets\/heroScene-.*\.js$/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'landing-scene',
+              expiration: { maxEntries: 2 },
+            },
+          },
           {
             urlPattern: /\.woff2$/,
             handler: 'CacheFirst',

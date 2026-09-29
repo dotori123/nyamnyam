@@ -10,7 +10,7 @@ import { groupByProduct } from '../../utils/products';
 import { APP_NAME, APP_TITLE } from '../../utils/routeTitles';
 import { markStarted } from '../../storage/firstVisit';
 import { LANDING, type LandingItem } from './content';
-import { useReveal, useTilt } from './motion';
+import { useHeroScene, useReveal, useTilt } from './motion';
 import './LandingPage.scss';
 
 /**
@@ -63,8 +63,11 @@ export default function LandingPage() {
   const rootRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLElement>(null);
   const phoneRef = useRef<HTMLElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const sceneRef = useRef<HTMLCanvasElement>(null);
   useReveal(rootRef);
   useTilt(heroRef, phoneRef);
+  useHeroScene(sceneRef, stageRef);
 
   // 샘플 기록이 깔린 목록으로 넘어간다.
   // / 에서는 표시만 바꾸면 같은 주소가 목록이 되고, /intro 에서는 / 로 옮겨 간다
@@ -97,7 +100,9 @@ export default function LandingPage() {
             <span className="landing__title-line">{hero.title[1]}</span>
           </h1>
 
-          <div className="landing__stage">
+          <div className="landing__stage" ref={stageRef}>
+            {/* 3D 종이 조각 (motion.ts가 나중에 불러와 그린다). 못 그리면 아래 CSS 조각이 대신한다 */}
+            <canvas ref={sceneRef} className="landing__scene" aria-hidden="true" />
             <div className="landing__falling" aria-hidden="true">
               {FALLING.map((piece, index) => (
                 <span
