@@ -60,4 +60,16 @@ export const MOCK_CATS: Cat[] = [
     createdAt: daysAgo(120),
     updatedAt: daysAgo(30),
   },
+  {
+    id: 'cat_mock_02',
+    name: '보리',
+    photo: photo('cat', '#e3e8ee', '#3f5f7c'),
+    birthday: yearsAgo(1, 8),
+    breed: '브리티시 숏헤어',
+    gender: 'male',
+    weightKg: 5.6,
+    memo: '뭐든 잘 먹지만 급하게 먹고 토할 때가 있다.',
+    createdAt: daysAgo(170),
+    updatedAt: daysAgo(15),
+  },
 ];
