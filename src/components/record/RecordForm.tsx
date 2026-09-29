@@ -164,6 +164,18 @@ export default function RecordForm({
         <CatSelect value={values.catId} onChange={(catId) => setValue('catId', catId)} />
       </section>
 
+      {/* 봉지·캔을 손에 든 채 먼저 찍고, 사진을 보며 아래 제품 정보를 적는 흐름이라 위에 둔다 */}
+      <section className="record-form__section">
+        <h2 className="record-form__section-title">사진</h2>
+        <PhotoPicker
+          photos={photos}
+          onAddFiles={addFiles}
+          onRemove={removePhoto}
+          isFull={isFull}
+          busy={busy}
+        />
+      </section>
+
       <section className="record-form__section">
         <h2 className="record-form__section-title">제품 정보</h2>
 
@@ -379,17 +391,6 @@ export default function RecordForm({
             </p>
           )}
         </div>
-      </section>
-
-      <section className="record-form__section">
-        <h2 className="record-form__section-title">사진</h2>
-        <PhotoPicker
-          photos={photos}
-          onAddFiles={addFiles}
-          onRemove={removePhoto}
-          isFull={isFull}
-          busy={busy}
-        />
       </section>
 
       <section className="record-form__section">
