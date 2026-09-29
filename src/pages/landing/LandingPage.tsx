@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import CatMark from '../../components/common/CatMark';
 import Icon from '../../components/common/Icon';
 import ProductCard from '../../components/record/ProductCard';
@@ -12,7 +12,7 @@ import { LANDING, type LandingItem } from './content';
 import './LandingPage.scss';
 
 /**
- * 처음 온 사람에게 보여주는 소개 화면 (/).
+ * 처음 온 사람에게 보여주는 소개 화면 (/), 그리고 누구나 볼 수 있는 /intro.
  *
  * 앱 셸(헤더·하단 탭) 밖에서 그린다. 앱을 한 번 쓰면 같은 주소가 기록 목록이 된다
  * (storage/firstVisit.ts). 문구는 content.ts 한 곳에 있고,
@@ -40,9 +40,13 @@ export default function LandingPage() {
     return { product, record: MOCK_RECORDS[0] };
   }, []);
 
-  // 샘플 기록이 깔린 목록으로 넘어간다. 주소는 그대로 / 라 표시만 바꾸면 화면이 바뀐다
+  const navigate = useNavigate();
+
+  // 샘플 기록이 깔린 목록으로 넘어간다.
+  // / 에서는 표시만 바꾸면 같은 주소가 목록이 되고, /intro 에서는 / 로 옮겨 간다
   const browseSample = () => {
     markStarted();
+    navigate('/');
     window.scrollTo(0, 0);
   };
 

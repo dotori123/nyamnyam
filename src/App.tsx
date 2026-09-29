@@ -19,6 +19,8 @@ export default function App() {
   return (
     <Routes>
       {!started && <Route path="/" element={<LandingPage />} />}
+      {/* 앱을 쓰던 사람도 소개를 다시 보거나 공유할 수 있게 늘 열어 둔다 */}
+      <Route path="/intro" element={<LandingPage />} />
       <Route element={<AppLayout />}>
         {started && <Route path="/" element={<RecordListPage />} />}
         <Route path="/new" element={<RecordFormPage />} />
