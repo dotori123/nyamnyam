@@ -59,3 +59,23 @@
     }
   }
 }
+
+// 평가 전 — 하트 자리에 놓는 작은 배지. 아직 결과가 없다는 뜻이라 조용한 돌색 면에 둔다
+.rating-pending {
+  display: inline-flex;
+  // 세로로 쌓인 헤더 안에서도 글자만큼만 차지하게
+  align-self: flex-start;
+  align-items: center;
+  padding: 2px 8px;
+  background: var(--primary-soft);
+  border-radius: t.$radius-pill;
+  color: var(--primary-ink);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.4;
+
+  &--lg {
+    padding: 4px 12px;
+    font-size: 14px;
+  }
+}

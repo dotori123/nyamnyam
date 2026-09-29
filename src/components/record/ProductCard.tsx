@@ -36,8 +36,14 @@ export default function ProductCard({ group }: { group: ProductGroup }) {
           <span className="product-card__brand">{group.brand}</span>
           <strong className="product-card__name">{group.productName}</strong>
           <span className="product-card__meta">
-            <RatingHearts value={roundToRating(group.averageRating)} size="sm" />
-            <span className="product-card__average">{group.averageRating.toFixed(1)}</span>
+            {group.averageRating === null ? (
+              <RatingHearts value={null} size="sm" />
+            ) : (
+              <>
+                <RatingHearts value={roundToRating(group.averageRating)} size="sm" />
+                <span className="product-card__average">{group.averageRating.toFixed(1)}</span>
+              </>
+            )}
             <span className="product-card__count">· {group.purchases.length}번 구매</span>
           </span>
         </div>

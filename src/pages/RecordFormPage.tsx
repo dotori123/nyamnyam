@@ -42,13 +42,14 @@ export default function RecordFormPage() {
 
   /**
    * 다시 기록: 제품·구매 정보는 가져오고 **이번에 겪은 일**은 비운다.
-   * 만족도·배변·재구매 의향·메모·사진은 이번 급여의 결과라 물려받으면 안 되고,
+   * 만족도·배변·재구매 의향·메모·사진은 이번 급여의 결과라 물려받으면 안 되고
+   * (그래서 새 기록은 "평가 전"으로 시작한다),
    * 구매일은 오늘로 넣어 두면 틀린 날짜가 조용히 저장될 수 있어 비워 둔다.
    */
   const template = source
     ? {
         ...source,
-        rating: 3 as const,
+        rating: null,
         stool: 'unknown' as const,
         repurchase: 'maybe' as const,
         purchasedAt: null,

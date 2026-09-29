@@ -5,7 +5,8 @@ import './RatingHearts.scss';
 const VALUES: Rating[] = [1, 2, 3, 4, 5];
 
 interface Props {
-  value: Rating;
+  /** null이면 평가 전 — 읽기 전용에서는 "평가 전" 배지, 입력에서는 하트가 모두 꺼진 상태 */
+  value: Rating | null;
   /** 넘기지 않으면 읽기 전용 표시 */
   onChange?: (value: Rating) => void;
   size?: 'sm' | 'md' | 'lg';
@@ -16,6 +17,9 @@ export default function RatingHearts({ value, onChange, size = 'md', showValue =
   const readOnly = !onChange;
 
   if (readOnly) {
+    if (value === null) {
+      return <span className={`rating-pending rating-pending--${size}`}>평가 전</span>;
+    }
     return (
       <span className={`rating rating--${size}`} aria-label={`만족도 5점 만점에 ${value}점`}>
         {VALUES.map((v) => (
@@ -39,14 +43,16 @@ export default function RatingHearts({ value, onChange, size = 'md', showValue =
           type="button"
           role="radio"
           aria-checked={v === value}
+          // 평가 전이면 첫 하트로 들어오게 (radiogroup은 한 칸만 Tab을 받는다)
+          tabIndex={v === (value ?? 1) ? 0 : -1}
           aria-label={`${v}점`}
-          className={v <= value ? 'rating__button' : 'rating__button rating__button--off'}
+          className={value !== null && v <= value ? 'rating__button' : 'rating__button rating__button--off'}
           onClick={() => onChange(v)}
         >
-          <Icon name="heart" filled={v <= value} />
+          <Icon name="heart" filled={value !== null && v <= value} />
         </button>
       ))}
-      {showValue && <span className="rating__value">{value}.0</span>}
+      {showValue && value !== null && <span className="rating__value">{value}.0</span>}
     </div>
   );
 }

@@ -69,12 +69,17 @@ export default function RecordCard({ record }: { record: FeedRecord }) {
               <span className="record-card__badge">
                 {foodType.icon && <Icon name={foodType.icon} />} {foodType.label}
               </span>
-              <span className={`record-card__badge record-card__badge--stool-${record.stool}`}>
-                {stool.label}
-              </span>
-              <span className={`record-card__badge record-card__badge--repurchase-${record.repurchase}`}>
-                {repurchase.label}
-              </span>
+              {/* 평가 전이면 배변·재구매는 아직 결과가 아니다 */}
+              {record.rating !== null && (
+                <>
+                  <span className={`record-card__badge record-card__badge--stool-${record.stool}`}>
+                    {stool.label}
+                  </span>
+                  <span className={`record-card__badge record-card__badge--repurchase-${record.repurchase}`}>
+                    {repurchase.label}
+                  </span>
+                </>
+              )}
             </div>
 
             {unitPrice && <span className="record-card__price-unit">{unitPrice}</span>}

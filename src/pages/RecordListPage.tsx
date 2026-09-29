@@ -10,6 +10,7 @@ import { groupByProduct, sortProducts } from '../utils/products';
 import EmptyState from '../components/common/EmptyState';
 import LoadingState from '../components/common/LoadingState';
 import './RecordListPage.scss';
+import { averageRating, isRated } from '../utils/review';
 
 export default function RecordListPage() {
   const { records, brands, flavors, loading } = useRecords();
@@ -39,10 +40,10 @@ export default function RecordListPage() {
     reset,
   } = useRecordFilters(records, searchParams.get('cat'));
 
-  const averageRating = records.length
-    ? records.reduce((sum, record) => sum + record.rating, 0) / records.length
-    : 0;
-  const repurchaseCount = records.filter((record) => record.repurchase === 'yes').length;
+  const ratingAverage = averageRating(records);
+  const repurchaseCount = records.filter(
+    (record) => isRated(record) && record.repurchase === 'yes',
+  ).length;
 
   // 불러오는 중에 "기록이 없어요"를 띄우면 있는 사람에게 없다고 하는 셈이다
   const products = useMemo(
@@ -74,7 +75,7 @@ export default function RecordListPage() {
           <span className="record-list-page__stat-label">전체 기록</span>
         </li>
         <li className="record-list-page__stat">
-          <span className="record-list-page__stat-value">{averageRating.toFixed(1)}</span>
+          <span className="record-list-page__stat-value">{ratingAverage === null ? '-' : ratingAverage.toFixed(1)}</span>
           <span className="record-list-page__stat-label">평균 만족도</span>
         </li>
         <li className="record-list-page__stat">

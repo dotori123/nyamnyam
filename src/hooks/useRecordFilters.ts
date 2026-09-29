@@ -29,8 +29,8 @@ function matchesQuery(record: FeedRecord, query: string): boolean {
 function compare(a: FeedRecord, b: FeedRecord, sort: SortKey): number {
   switch (sort) {
     case 'rating':
-      // 만족도 같으면 최신순
-      return b.rating - a.rating || b.createdAt.localeCompare(a.createdAt);
+      // 만족도 같으면 최신순. 평가 전은 뒤로
+      return (b.rating ?? 0) - (a.rating ?? 0) || b.createdAt.localeCompare(a.createdAt);
     case 'priceLow':
       // 가격 미입력은 항상 뒤로
       return (a.price ?? Infinity) - (b.price ?? Infinity);

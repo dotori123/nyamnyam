@@ -1,5 +1,6 @@
 import type { FeedRecord, FoodType, Photo, Rating, SortKey } from '../types';
 import { countPricePerItem, unitPricePer100 } from './stats';
+import { averageRating } from './review';
 
 /**
  * 같은 제품을 묶어 보기.
@@ -18,7 +19,8 @@ export interface Purchase {
   store: string;
   /** 구매일. 없으면 기록 생성일로 대신한다 */
   date: string;
-  rating: Rating;
+  /** null이면 평가 전 */
+  rating: Rating | null;
 }
 
 export interface ProductGroup {
@@ -30,7 +32,8 @@ export interface ProductGroup {
   photo: Photo | null;
   /** 구매 이력. 최근 순 */
   purchases: Purchase[];
-  averageRating: number;
+  /** 평가한 구매의 평균 만족도. 전부 평가 전이면 null */
+  averageRating: number | null;
   /** 가장 싸게 산 기록. 가격이 적힌 게 없으면 null */
   cheapest: Purchase | null;
   /** 가장 최근 구매 */
@@ -119,7 +122,7 @@ export function groupByProduct(records: FeedRecord[]): ProductGroup[] {
       foodType: sorted[0].foodType,
       photo: sorted.find((record) => record.photos.some((photo) => photo.url))?.photos[0] ?? null,
       purchases,
-      averageRating: group.reduce((sum, record) => sum + record.rating, 0) / group.length,
+      averageRating: averageRating(group),
       cheapest,
       latest: purchases[0],
       averageUnitPriceLabel,
@@ -135,7 +138,8 @@ export function sortProducts(groups: ProductGroup[], sort: SortKey): ProductGrou
   return [...groups].sort((a, b) => {
     switch (sort) {
       case 'rating':
-        return b.averageRating - a.averageRating || b.purchases.length - a.purchases.length;
+        // 평가 전 제품은 뒤로
+        return (b.averageRating ?? -1) - (a.averageRating ?? -1) || b.purchases.length - a.purchases.length;
       case 'priceLow':
       case 'priceHigh': {
         const [x, y] = [byUnitPrice(a), byUnitPrice(b)];

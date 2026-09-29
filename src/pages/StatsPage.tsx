@@ -110,12 +110,13 @@ export default function StatsPage() {
               <span className="stats-page__tile-label">전체 기록</span>
             </li>
             <li className="stats-page__tile">
-              <span className="stats-page__tile-value">{summary.averageRating.toFixed(1)}</span>
+              <span className="stats-page__tile-value">{summary.averageRating === null ? '-' : summary.averageRating.toFixed(1)}
+              </span>
               <span className="stats-page__tile-label">평균 만족도</span>
             </li>
             <li className="stats-page__tile">
               <span className="stats-page__tile-value">
-                {Math.round(summary.repurchaseRate * 100)}%
+                {summary.repurchaseRate === null ? '-' : `${Math.round(summary.repurchaseRate * 100)}%`}
               </span>
               <span className="stats-page__tile-label">재구매 의향</span>
             </li>

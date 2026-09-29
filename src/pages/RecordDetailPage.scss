@@ -192,4 +192,23 @@
       flex: 1;
     }
   }
+
+  // 평가 전 안내 — 먹여 본 뒤 할 일을 한 줄로
+  &__pending {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    margin-top: 16px;
+    padding: 16px;
+    background: var(--primary-soft);
+    border-radius: t.$radius-lg;
+
+    p {
+      color: var(--primary-ink);
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.6;
+    }
+  }
 }

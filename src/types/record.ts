@@ -66,8 +66,8 @@ export interface FeedRecord {
   volume: Volume | null;
 
   // ── 평가 ──────────────────────────────────
-  /** 만족도 (하트 1~5) */
-  rating: Rating;
+  /** 만족도 (하트 1~5). null이면 아직 먹여 보기 전 — "평가 전" (utils/review.ts) */
+  rating: Rating | null;
   /** 배변 상태 */
   stool: StoolStatus;
   /** 재구매 의향 */
@@ -108,7 +108,8 @@ export interface FeedRecordFormValues {
   foodType: FoodType;
   volumeAmount: string;
   volumeUnit: VolumeUnit;
-  rating: Rating;
+  /** null이면 평가 전으로 저장한다 */
+  rating: Rating | null;
   stool: StoolStatus;
   repurchase: RepurchaseIntent;
   price: string;

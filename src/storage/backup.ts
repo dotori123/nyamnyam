@@ -193,7 +193,8 @@ function looksLikeRecord(value: unknown): boolean {
     isObject(value) &&
     typeof value.id === 'string' &&
     typeof value.brand === 'string' &&
-    typeof value.rating === 'number' &&
+    // 평가 전 기록은 null
+    (typeof value.rating === 'number' || value.rating === null) &&
     Array.isArray(value.photos)
   );
 }

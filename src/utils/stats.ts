@@ -1,6 +1,7 @@
 import type { FeedRecord, FoodType, RepurchaseIntent, StoolStatus } from '../types';
 import { FOOD_TYPE_MAP, REPURCHASE_MAP, STOOL_MAP } from './options';
 import type { IconName } from '../components/common/icons';
+import { averageRating, isRated } from './review';
 
 /**
  * 기록 집계.
@@ -12,19 +13,22 @@ import type { IconName } from '../components/common/icons';
  * 공통 규칙
  *  - 가격이 없는 기록(price === null)은 지출 계산에서 뺀다. 0원으로 치면 평균이 왜곡된다.
  *  - 구매일이 없는 기록(purchasedAt === null)은 월별 지출에서 뺀다.
- *  - 만족도는 모든 기록에 있으므로(1~5 필수) 평균에서 뺄 일이 없다.
+ *  - 평가 전 기록(rating === null)은 만족도·배변·재구매 집계에서 뺀다. 아직 먹여 보지 않았다.
+ *    지출·종류·단가처럼 산 사실만으로 세는 집계에는 넣는다.
  */
 
 export interface Summary {
   count: number;
-  /** 평균 만족도. 기록이 없으면 0 */
-  averageRating: number;
+  /** 평균 만족도. 평가한 기록이 없으면 null */
+  averageRating: number | null;
+  /** 평가 전 기록 수 */
+  pendingCount: number;
   /** 가격이 적힌 기록의 합계(원) */
   totalSpend: number;
   /** 가격이 적힌 기록 수 — "10건 중 7건 기준" 같은 안내에 쓴다 */
   pricedCount: number;
-  /** 재구매 의향 비율 0~1 */
-  repurchaseRate: number;
+  /** 재구매 의향 비율 0~1 (평가한 기록 중). 평가한 기록이 없으면 null */
+  repurchaseRate: number | null;
 }
 
 /** 막대 한 줄 */
@@ -105,17 +109,21 @@ export interface MonthSpend {
 export function summarize(records: FeedRecord[]): Summary {
   const count = records.length;
   if (count === 0) {
-    return { count: 0, averageRating: 0, totalSpend: 0, pricedCount: 0, repurchaseRate: 0 };
+    return { count: 0, averageRating: null, pendingCount: 0, totalSpend: 0, pricedCount: 0, repurchaseRate: null };
   }
 
   const priced = records.filter((record) => record.price !== null);
+  const rated = records.filter(isRated);
 
   return {
     count,
-    averageRating: records.reduce((sum, record) => sum + record.rating, 0) / count,
+    averageRating: averageRating(records),
+    pendingCount: count - rated.length,
     totalSpend: priced.reduce((sum, record) => sum + (record.price ?? 0), 0),
     pricedCount: priced.length,
-    repurchaseRate: records.filter((record) => record.repurchase === 'yes').length / count,
+    repurchaseRate: rated.length
+      ? rated.filter((record) => record.repurchase === 'yes').length / rated.length
+      : null,
   };
 }
 
@@ -128,7 +136,7 @@ export function summarize(records: FeedRecord[]): Summary {
 export function rankBrandsByRating(records: FeedRecord[], limit = 6): StatRow[] {
   const buckets = new Map<string, { sum: number; count: number }>();
 
-  for (const record of records) {
+  for (const record of records.filter(isRated)) {
     if (!record.brand) continue;
     const bucket = buckets.get(record.brand) ?? { sum: 0, count: 0 };
     bucket.sum += record.rating;
@@ -169,7 +177,7 @@ export function countByFoodType(records: FeedRecord[]): StatRow[] {
 export function countByRepurchase(records: FeedRecord[]): StatRow[] {
   const order: RepurchaseIntent[] = ['yes', 'maybe', 'no'];
   return order.map((intent) => {
-    const count = records.filter((record) => record.repurchase === intent).length;
+    const count = records.filter((record) => isRated(record) && record.repurchase === intent).length;
     return {
       key: intent,
       label: REPURCHASE_MAP[intent].label,
@@ -244,7 +252,7 @@ export function countComparableForUnitPrice(records: FeedRecord[]): number {
 export function countByStool(records: FeedRecord[]): StatRow[] {
   const order: StoolStatus[] = ['good', 'soft', 'diarrhea', 'hard', 'constipated', 'unknown'];
   return order.map((stool) => {
-    const count = records.filter((record) => record.stool === stool).length;
+    const count = records.filter((record) => isRated(record) && record.stool === stool).length;
     return {
       key: stool,
       label: STOOL_MAP[stool].label,
@@ -268,8 +276,8 @@ export function rankBrandsByStoolTrouble(records: FeedRecord[], limit = 5): Stat
 
   for (const record of records) {
     if (!record.brand) continue;
-    // 모름은 분모에서도 뺀다
-    if (record.stool === 'unknown') continue;
+    // 모름·평가 전은 분모에서도 뺀다
+    if (record.stool === 'unknown' || !isRated(record)) continue;
 
     const bucket = buckets.get(record.brand) ?? { trouble: 0, judged: 0 };
     bucket.judged += 1;

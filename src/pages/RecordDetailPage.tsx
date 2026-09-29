@@ -88,23 +88,34 @@ export default function RecordDetailPage() {
         <RatingHearts value={record.rating} size="lg" showValue />
       </header>
 
-      <section className="record-detail__section">
-        <h3 className="record-detail__section-title">후기</h3>
-        <dl className="record-detail__rows">
-          <div className="record-detail__row">
-            <dt>배변 상태</dt>
-            <dd className={`record-detail__stool record-detail__stool--${record.stool}`}>
-              {stool.label}
-            </dd>
-          </div>
-          <div className="record-detail__row">
-            <dt>재구매 의향</dt>
-            <dd>
-              {repurchase.label}
-            </dd>
-          </div>
-        </dl>
-      </section>
+      {record.rating === null && (
+        <section className="record-detail__pending">
+          <p>아직 평가 전이에요. 먹여 본 뒤 만족도와 배변 상태를 남겨 주세요.</p>
+          <Link to={`/records/${record.id}/edit`} className="btn btn--primary">
+            평가하기
+          </Link>
+        </section>
+      )}
+
+      {record.rating !== null && (
+        <section className="record-detail__section">
+          <h3 className="record-detail__section-title">후기</h3>
+          <dl className="record-detail__rows">
+            <div className="record-detail__row">
+              <dt>배변 상태</dt>
+              <dd className={`record-detail__stool record-detail__stool--${record.stool}`}>
+                {stool.label}
+              </dd>
+            </div>
+            <div className="record-detail__row">
+              <dt>재구매 의향</dt>
+              <dd>
+                {repurchase.label}
+              </dd>
+            </div>
+          </dl>
+        </section>
+      )}
 
       <section className="record-detail__section">
         <h3 className="record-detail__section-title">구매 정보</h3>

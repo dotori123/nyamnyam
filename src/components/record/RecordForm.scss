@@ -61,4 +61,20 @@
       flex: 1;
     }
   }
+
+  // 만족도 아래 작은 글자 버튼 — 주 동작이 아니라 빠져나가는 길이라 조용하게
+  &__pending {
+    align-self: flex-start;
+    padding: 0;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 13px;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+
+    &:hover {
+      color: var(--text);
+    }
+  }
 }
