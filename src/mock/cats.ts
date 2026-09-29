@@ -50,7 +50,7 @@ function photo(icon: IconName, bg: string, fg: string) {
 export const MOCK_CATS: Cat[] = [
   {
     id: 'cat_mock_01',
-    name: '나비',
+    name: '아리',
     photo: photo('cat', '#ffe0c2', '#b85714'),
     birthday: yearsAgo(3, 4),
     breed: '코리안숏헤어',
