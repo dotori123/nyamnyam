@@ -1,0 +1,13 @@
+# 냥냠냠 — 공개된 건 첫 화면(소개)뿐이다.
+# 나머지 주소는 로그인한 사람 각자의 기록이라 크롤러가 열면 빈 화면이 된다.
+User-agent: *
+Allow: /$
+Allow: /og-image.png
+Allow: /llms.txt
+Disallow: /records/
+Disallow: /cats
+Disallow: /new
+Disallow: /stats
+Disallow: /settings
+
+Sitemap: https://nyamnyam-1fe27.web.app/sitemap.xml

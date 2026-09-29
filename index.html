@@ -4,7 +4,55 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#f4a71a" />
-    <meta name="description" content="우리 고양이가 먹은 사료와 습식을 기록하고 다시 찾아보는 앱" />
+    <meta name="description" content="고양이가 먹은 사료·습식·간식을 기록하는 무료 앱. 만족도와 배변 상태, 재구매 의향을 남기고 구매처별 가격과 100g당 단가를 비교해 다음에 살 사료를 쉽게 고르세요." />
+
+    <!--
+      검색·링크 미리보기용. 주소를 바꾸면(커스텀 도메인 등) 여기와
+      public/robots.txt, public/sitemap.xml, public/llms.txt의 주소를 함께 바꾼다.
+    -->
+    <link rel="canonical" href="https://nyamnyam-1fe27.web.app/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="냥냠냠" />
+    <meta property="og:locale" content="ko_KR" />
+    <meta property="og:url" content="https://nyamnyam-1fe27.web.app/" />
+    <meta property="og:title" content="냥냠냠 · 고양이 사료 기록장" />
+    <meta property="og:description" content="고양이가 먹은 사료·습식·간식을 기록하는 무료 앱. 만족도와 배변 상태, 재구매 의향을 남기고 구매처별 가격과 100g당 단가를 비교해 다음에 살 사료를 쉽게 고르세요." />
+    <meta property="og:image" content="https://nyamnyam-1fe27.web.app/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="냥냠냠 로고와 '잘 먹은 사료, 다음에도 찾게.' 문구" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="냥냠냠 · 고양이 사료 기록장" />
+    <meta name="twitter:description" content="고양이가 먹은 사료·습식·간식을 기록하는 무료 앱. 만족도와 배변 상태, 재구매 의향을 남기고 구매처별 가격과 100g당 단가를 비교해 다음에 살 사료를 쉽게 고르세요." />
+    <meta name="twitter:image" content="https://nyamnyam-1fe27.web.app/og-image.png" />
+
+    <!-- 검색엔진·AI가 '무슨 앱인지' 구조로 읽는 정보. 본문(#root 안 소개)과 내용이 같아야 한다 -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "냥냠냠",
+        "alternateName": ["NyamNyam", "냥냠냠 고양이 사료 기록장"],
+        "url": "https://nyamnyam-1fe27.web.app/",
+        "description": "고양이가 먹은 사료·습식·간식을 기록하는 무료 앱. 만족도와 배변 상태, 재구매 의향을 남기고 구매처별 가격과 100g당 단가를 비교해 다음에 살 사료를 쉽게 고르세요.",
+        "inLanguage": "ko",
+        "applicationCategory": "LifestyleApplication",
+        "operatingSystem": "Web, Android, iOS",
+        "browserRequirements": "JavaScript 필요. 홈 화면에 추가해 앱처럼 설치할 수 있음(PWA)",
+        "image": "https://nyamnyam-1fe27.web.app/og-image.png",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "KRW" },
+        "featureList": [
+          "사료·습식·간식·영양제 구매 기록",
+          "만족도, 배변 상태, 재구매 의향 기록",
+          "같은 제품의 구매처별 가격과 최저가 비교",
+          "100g당 단가 계산",
+          "브랜드별 만족도와 월별 지출 통계",
+          "여러 마리 고양이 프로필",
+          "구글 로그인으로 기기 간 동기화",
+          "백업 파일 내보내기·가져오기"
+        ]
+      }
+    </script>
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -73,12 +121,25 @@
         font-size: 13px;
       }
 
+      /* JS가 꺼진 브라우저에서만 실제로 보인다 (나머지는 스플래시가 덮고, React가 갈아끼운다) */
+      .seo-intro {
+        max-width: 520px;
+        margin: 0 auto;
+        padding: 32px 16px 64px;
+        color: #26261f;
+        font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont,
+          'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', system-ui, sans-serif;
+        line-height: 1.6;
+      }
+
       @media (prefers-reduced-motion: reduce) {
         #splash {
           transition: none;
         }
       }
     </style>
+    <!-- JS가 없으면 스플래시를 걷어낼 코드도 돌지 않는다. 소개 본문이 보이도록 처음부터 숨긴다 -->
+    <noscript><style>#splash { display: none; }</style></noscript>
   </head>
   <body>
     <div id="splash">
@@ -122,7 +183,45 @@
       <p class="splash__tagline">Cat food, remembered.</p>
     </div>
 
-    <div id="root"></div>
+    <!--
+      #root 안의 소개는 JS를 실행하지 않는 크롤러(대부분의 AI 크롤러)와 JS가 꺼진 브라우저를 위한 것이다.
+      React가 마운트되면 이 내용을 통째로 갈아끼우고, 그 전까지는 스플래시가 덮고 있어 사용자에게는 보이지 않는다.
+      앱 기능이 바뀌면 여기와 public/llms.txt, 위 JSON-LD를 함께 고친다.
+    -->
+    <div id="root">
+      <main class="seo-intro">
+        <h1>냥냠냠 · 고양이 사료 기록장</h1>
+        <p>
+          우리 고양이가 먹은 사료, 습식, 간식, 영양제를 기록하고 다시 찾아보는 무료 웹앱이에요.
+          잘 먹었는지, 배변은 괜찮았는지, 또 살지를 남겨 두면 다음에 살 사료를 고민 없이 고를 수 있어요.
+        </p>
+
+        <h2>무엇을 기록하나요</h2>
+        <ul>
+          <li>브랜드, 제품명, 맛, 종류(건사료·습식·간식·영양제), 용량</li>
+          <li>만족도(하트 5단계), 배변 상태, 재구매 의향</li>
+          <li>가격과 구매처, 제품 사진, 메모와 태그</li>
+        </ul>
+
+        <h2>기록이 쌓이면</h2>
+        <ul>
+          <li>같은 제품을 여러 번 산 기록을 한데 모아 구매처별 가격과 최저가를 보여줘요</li>
+          <li>용량을 적으면 100g당 단가를 계산해 제품끼리 비교할 수 있어요</li>
+          <li>브랜드별 평균 만족도, 배변이 안 좋았던 사료, 최근 6개월 지출을 통계로 보여줘요</li>
+          <li>여러 마리를 키워도 고양이별로 나눠 볼 수 있어요</li>
+        </ul>
+
+        <h2>자주 묻는 질문</h2>
+        <h3>가입해야 쓸 수 있나요?</h3>
+        <p>아니요. 로그인하지 않으면 기록이 이 기기에만 저장돼요. 구글로 로그인하면 여러 기기에서 같은 기록을 볼 수 있어요.</p>
+        <h3>앱을 설치해야 하나요?</h3>
+        <p>브라우저에서 바로 쓸 수 있어요. 휴대폰 홈 화면에 추가하면 앱처럼 열려요.</p>
+        <h3>기록을 옮기거나 보관할 수 있나요?</h3>
+        <p>설정의 백업에서 사진까지 담은 파일로 내보내고, 다른 기기에서 가져올 수 있어요.</p>
+
+        <noscript><p><strong>냥냠냠은 JavaScript를 켜야 쓸 수 있어요.</strong></p></noscript>
+      </main>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

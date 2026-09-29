@@ -1,0 +1,94 @@
+<!doctype html>
+<!--
+  링크 미리보기(OG) 이미지 원본. 1200×630으로 찍어 public/og-image.png를 만든다.
+  고치고 나면: npm run og
+  색은 기본 테마(삼색이), 서체는 Pretendard. 규칙은 DESIGN.md.
+-->
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      @font-face {
+        font-family: 'Pretendard';
+        font-weight: 400;
+        src: url('../../node_modules/pretendard/dist/web/static/woff2/Pretendard-Regular.woff2') format('woff2');
+      }
+      @font-face {
+        font-family: 'Pretendard';
+        font-weight: 600;
+        src: url('../../node_modules/pretendard/dist/web/static/woff2/Pretendard-SemiBold.woff2') format('woff2');
+      }
+      @font-face {
+        font-family: 'Pretendard';
+        font-weight: 800;
+        src: url('../../node_modules/pretendard/dist/web/static/woff2/Pretendard-ExtraBold.woff2') format('woff2');
+      }
+
+      * { box-sizing: border-box; margin: 0; }
+
+      html, body {
+        width: 1200px;
+        height: 630px;
+        overflow: hidden;
+      }
+
+      body {
+        display: flex;
+        align-items: center;
+        gap: 64px;
+        padding: 0 96px;
+        background: #faf7f2;
+        color: #26261f;
+        font-family: 'Pretendard', sans-serif;
+      }
+
+      .mark {
+        flex: 0 0 auto;
+        width: 240px;
+        height: 240px;
+      }
+
+      .name {
+        font-size: 30px;
+        font-weight: 800;
+        color: #8f5a06;
+      }
+
+      h1 {
+        margin-top: 14px;
+        font-size: 64px;
+        font-weight: 800;
+        line-height: 1.18;
+      }
+
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 34px;
+      }
+
+      .chip {
+        padding: 10px 20px;
+        background: #ffffff;
+        border: 1px solid #e8e4dc;
+        border-radius: 999px;
+        font-size: 24px;
+        font-weight: 600;
+        color: #4b4a42;
+      }
+    </style>
+  </head>
+  <body>
+    <img class="mark" src="../../public/favicon.svg" alt="" />
+    <div>
+      <p class="name">냥냠냠</p>
+      <h1>잘 먹은 사료,<br />다음에도 찾게.</h1>
+      <div class="chips">
+        <span class="chip">사료·습식·간식 기록</span>
+        <span class="chip">만족도·배변</span>
+        <span class="chip">최저가 비교</span>
+      </div>
+    </div>
+  </body>
+</html>

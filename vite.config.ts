@@ -12,7 +12,7 @@ export default defineConfig({
       manifest: {
         name: '냥냠냠 · 고양이 사료 기록장',
         short_name: '냥냠냠',
-        description: '우리 고양이가 먹은 사료와 습식을 기록하고 다시 찾아보는 앱',
+        description: '고양이가 먹은 사료·습식·간식을 기록하고 다음에 살 사료를 고르는 앱',
         lang: 'ko',
         start_url: '/',
         scope: '/',
@@ -38,6 +38,8 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,svg,png}'],
         // SPA 라우팅: 캐시 미스 시 index.html로 폴백
         navigateFallback: 'index.html',
+        // 크롤러용 파일은 주소창에 직접 쳐도 index.html이 아니라 파일 그대로 보여야 한다
+        navigateFallbackDenylist: [/^\/(robots\.txt|sitemap\.xml|llms\.txt|og-image\.png)$/],
         runtimeCaching: [
           {
             urlPattern: /\.woff2$/,

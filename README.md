@@ -359,6 +359,25 @@ firebase가 들어오면서 첫 화면 번들이 285KB → 858KB로 뛰었습니
 - 스플래시는 `index.html`에 인라인 스타일로 두어 번들 로드 전에 먼저 칠해지고,
   React 마운트 직후 `src/main.tsx`가 페이드아웃시켜 제거합니다.
 
+## 검색 · AI 노출 (SEO · GEO)
+
+앱 화면은 전부 로그인한 사람 각자의 기록이라 검색엔진에 보여줄 공개 페이지는 첫 화면 하나다.
+게다가 AI 크롤러(GPTBot, ClaudeBot, PerplexityBot 등)는 대부분 JS를 실행하지 않는다.
+그래서 **JS 없이도 읽히는 HTML**에 앱 소개를 담는다.
+
+| 파일 | 역할 |
+| --- | --- |
+| `index.html` `<head>` | 설명, canonical, Open Graph·트위터 카드, JSON-LD(`WebApplication`) |
+| `index.html` `#root` 안 소개 | 크롤러·JS 꺼진 브라우저용 본문. React가 마운트되면 갈아끼운다 (스플래시가 덮고 있어 사용자에겐 안 보임) |
+| `public/robots.txt` | 첫 화면만 열고, 개인 기록 주소(`/records`, `/cats` …)는 막는다 |
+| `public/sitemap.xml` | 첫 화면 |
+| `public/llms.txt` | AI가 읽는 앱 요약 (한글이라 `firebase.json`에서 charset을 붙인다) |
+| `public/og-image.png` | 링크 미리보기 이미지. 원본은 `scripts/og/og-image.html`, `npm run og`로 다시 찍는다 |
+
+- **기능이 바뀌면** 소개 본문, JSON-LD의 `featureList`, `llms.txt`를 함께 고친다. 셋이 어긋나면 검색엔진이 신뢰도를 낮춘다.
+- **주소가 바뀌면**(커스텀 도메인) `index.html`, `robots.txt`, `sitemap.xml`, `llms.txt`의 `nyamnyam-1fe27.web.app`을 모두 바꾼다.
+- 서비스워커가 이 파일들까지 `index.html`로 돌려주지 않도록 `vite.config.ts`의 `navigateFallbackDenylist`에 올려 두었다.
+
 ## Firebase 연동 (다음 단계)
 
 `src/firebase/README.md`에 순서와 문서 구조를 정리해뒀습니다.
