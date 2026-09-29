@@ -216,10 +216,12 @@ $theme-ids: map.keys($themes);
     --warn: #b8791a;
     --danger: #c0453f;
 
-    --shadow-sm: 0 1px 2px #{color.change($ink, $alpha: 0.06)},
-      0 2px 6px #{color.change($ink, $alpha: 0.04)};
-    --shadow-md: 0 4px 16px #{color.change($ink, $alpha: 0.08)};
-    --shadow-lg: 0 8px 32px #{color.change($ink, $alpha: 0.12)};
+    // 면은 그림자가 아니라 1px 헤어라인(--border)으로 나눈다 (DESIGN.md "깊이").
+    // 그림자는 떠 있다는 느낌만 아주 옅게 — 종이에 눌러 찍은 듯 납작하게 둔다.
+    --shadow-sm: 0 1px 2px #{color.change($ink, $alpha: 0.04)};
+    --shadow-md: 0 1px 6px #{color.change($ink, $alpha: 0.04)},
+      0 0 24px #{color.change($ink, $alpha: 0.05)};
+    --shadow-lg: 0 0 24px #{color.change($ink, $alpha: 0.08)};
   } @else {
     --good: #59b381;
     --warn: #d6a049;

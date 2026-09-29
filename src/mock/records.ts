@@ -1,4 +1,5 @@
 import type { FeedRecord } from '../types';
+import { iconMarkup, type IconName } from '../components/common/icons';
 
 /**
  * mock 데이터.
@@ -19,22 +20,19 @@ function daysAgo(n: number, hour = 12): string {
  * 네트워크 없이 동작하도록 data URI로 만든다.
  * 실제 사진이 붙으면 이 함수는 지워도 된다.
  */
-function thumb(emoji: string, from: string, to: string): string {
+function thumb(icon: IconName, bg: string, fg: string): string {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400">
-<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-<stop offset="0%" stop-color="${from}"/><stop offset="100%" stop-color="${to}"/>
-</linearGradient></defs>
-<rect width="400" height="400" fill="url(#g)"/>
-<text x="200" y="235" font-size="150" text-anchor="middle">${emoji}</text></svg>`;
+<rect width="400" height="400" fill="${bg}"/>
+${iconMarkup(icon, fg, 110, 110, 180)}</svg>`;
   return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
 }
 
 let photoSeq = 0;
-function photo(emoji: string, from: string, to: string) {
+function photo(icon: IconName, bg: string, fg: string) {
   photoSeq += 1;
   return {
     id: `photo_mock_${photoSeq}`,
-    url: thumb(emoji, from, to),
+    url: thumb(icon, bg, fg),
     storagePath: null,
     source: 'library' as const,
     fileName: null,
@@ -57,7 +55,7 @@ export const MOCK_RECORDS: FeedRecord[] = [
     currency: 'KRW',
     store: '쿠팡',
     purchasedAt: daysAgo(2),
-    photos: [photo('🍤', '#ffd9c2', '#ff9f6e')],
+    photos: [photo('fish', '#ffd9c2', '#b85714')],
     memo: '흡입 수준. 손에서 놓질 않는다. 하루 1개로 제한 중.',
     tags: ['최애', '기호성갑'],
     createdAt: daysAgo(2),

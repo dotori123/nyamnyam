@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Icon from '../common/Icon';
 
 interface Props {
   photoURL: string | null;
@@ -21,7 +22,7 @@ export default function AccountAvatar({ photoURL }: Props) {
   if (!photoURL || failed) {
     return (
       <span className="account-panel__avatar account-panel__avatar--blank" aria-hidden="true">
-        🐱
+        <Icon name="cat" />
       </span>
     );
   }

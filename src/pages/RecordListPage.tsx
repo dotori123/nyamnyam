@@ -55,7 +55,6 @@ export default function RecordListPage() {
   if (records.length === 0) {
     return (
       <EmptyState
-        emoji="🐾"
         title="아직 기록이 없어요"
         description="우리 고양이가 먹은 사료를 기록해두면 다음 구매가 쉬워져요."
         action={
@@ -131,7 +130,7 @@ export default function RecordListPage() {
         )
       ) : (
         <EmptyState
-          emoji="🔍"
+          icon="search"
           title="조건에 맞는 기록이 없어요"
           description="검색어나 필터를 바꿔서 다시 찾아보세요."
           action={

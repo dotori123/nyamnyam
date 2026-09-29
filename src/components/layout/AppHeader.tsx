@@ -1,6 +1,7 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import CatMark from '../common/CatMark';
 import { getSubPageTitle } from '../../utils/routeTitles';
+import Icon from '../common/Icon';
 import './AppHeader.scss';
 
 export default function AppHeader() {
@@ -24,7 +25,7 @@ export default function AppHeader() {
         </div>
 
         <Link to="/settings" className="app-header__settings" aria-label="설정">
-          ⚙️
+          <Icon name="settings" />
         </Link>
       </header>
     );
@@ -38,7 +39,7 @@ export default function AppHeader() {
         onClick={() => navigate(-1)}
         aria-label="뒤로 가기"
       >
-        ←
+        <Icon name="arrow-left" />
       </button>
       <h1 className="app-header__title app-header__title--sub">{subTitle}</h1>
     </header>

@@ -3,6 +3,7 @@ import type { ProductGroup } from '../../utils/products';
 import { FOOD_TYPE_MAP } from '../../utils/options';
 import { formatDate, formatPrice } from '../../utils/format';
 import RatingHearts from './RatingHearts';
+import Icon from '../common/Icon';
 import './ProductCard.scss';
 
 /** 이력에서 몇 건까지 보여줄지. 더 있으면 "외 N번"으로 접는다 */
@@ -27,7 +28,7 @@ export default function ProductCard({ group }: { group: ProductGroup }) {
           <img src={group.photo.url} alt="" className="product-card__image" />
         ) : (
           <span className="product-card__placeholder" aria-hidden="true">
-            {foodType.emoji}
+            <Icon name={foodType.icon ?? 'bowl'} />
           </span>
         )}
 

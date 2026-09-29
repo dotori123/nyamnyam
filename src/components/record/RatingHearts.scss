@@ -5,6 +5,8 @@
   align-items: center;
   gap: 1px;
   line-height: 1;
+  // 켜진 칸은 테마 포인트색으로 채우고, 꺼진 칸은 같은 모양의 빈 선으로 남긴다
+  color: var(--primary);
 
   &--sm {
     font-size: 11px;
@@ -20,7 +22,7 @@
   }
 
   &__heart--off {
-    opacity: 0.55;
+    color: var(--text-faint);
   }
 
   &__value {
@@ -38,6 +40,7 @@
     padding: 4px;
     background: none;
     border: none;
+    color: inherit;
     font-size: inherit;
     line-height: 1;
     transition: transform 0.12s t.$ease;
@@ -51,7 +54,7 @@
     }
 
     &--off {
-      opacity: 0.55;
+      color: var(--text-faint);
     }
   }
 }

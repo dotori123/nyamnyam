@@ -9,6 +9,7 @@ import {
   type BackupFile,
   type BackupSummary,
 } from '../../storage/backup';
+import Icon from '../common/Icon';
 import './BackupPanel.scss';
 
 type Status = 'idle' | 'working';
@@ -156,7 +157,8 @@ export default function BackupPanel() {
               onClick={() => void handleExport()}
               disabled={busy}
             >
-              💾 내보내기
+              <Icon name="download" />
+              내보내기
             </button>
             <button
               type="button"
@@ -164,7 +166,8 @@ export default function BackupPanel() {
               onClick={() => fileInputRef.current?.click()}
               disabled={busy}
             >
-              📂 가져오기
+              <Icon name="upload" />
+              가져오기
             </button>
           </div>
         </>

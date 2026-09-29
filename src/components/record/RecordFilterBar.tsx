@@ -4,6 +4,7 @@ import { FOOD_TYPE_OPTIONS, SORT_OPTIONS } from '../../utils/options';
 import SearchBar from '../common/SearchBar';
 import Chip from '../common/Chip';
 import CatAvatar from '../cat/CatAvatar';
+import Icon from '../common/Icon';
 import './RecordFilterBar.scss';
 
 interface Props {
@@ -81,7 +82,8 @@ export default function RecordFilterBar({
             selected={filters.foodType === option.value}
             onClick={() => onFoodTypeToggle(option.value)}
           >
-            {option.emoji} {option.label}
+            {option.icon && <Icon name={option.icon} />}
+            {option.label}
           </Chip>
         ))}
         <button

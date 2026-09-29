@@ -1,4 +1,5 @@
 import type { Cat } from '../types';
+import { iconMarkup, type IconName } from '../components/common/icons';
 
 /**
  * mock 고양이 프로필.
@@ -27,22 +28,19 @@ function daysAgo(n: number): string {
  * 네트워크 없이 동작하도록 data URI로 만든다.
  * 실제 사진이 붙으면 이 함수는 지워도 된다.
  */
-function avatar(emoji: string, from: string, to: string): string {
+function avatar(icon: IconName, bg: string, fg: string): string {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400">
-<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-<stop offset="0%" stop-color="${from}"/><stop offset="100%" stop-color="${to}"/>
-</linearGradient></defs>
-<rect width="400" height="400" fill="url(#g)"/>
-<text x="200" y="255" font-size="180" text-anchor="middle">${emoji}</text></svg>`;
+<rect width="400" height="400" fill="${bg}"/>
+${iconMarkup(icon, fg, 110, 110, 180)}</svg>`;
   return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
 }
 
 let photoSeq = 0;
-function photo(emoji: string, from: string, to: string) {
+function photo(icon: IconName, bg: string, fg: string) {
   photoSeq += 1;
   return {
     id: `photo_cat_${photoSeq}`,
-    url: avatar(emoji, from, to),
+    url: avatar(icon, bg, fg),
     storagePath: null,
     source: 'library' as const,
     fileName: null,
@@ -53,7 +51,7 @@ export const MOCK_CATS: Cat[] = [
   {
     id: 'cat_mock_01',
     name: '나비',
-    photo: photo('🐈', '#ffe0c2', '#ff9f6e'),
+    photo: photo('cat', '#ffe0c2', '#b85714'),
     birthday: yearsAgo(3, 4),
     breed: '코리안숏헤어',
     gender: 'female',

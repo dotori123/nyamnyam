@@ -6,10 +6,23 @@
   padding: 56px 24px;
   text-align: center;
 
-  &__emoji {
-    font-size: 44px;
-    line-height: 1;
-    margin-bottom: 6px;
+  &__mark {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 10px;
+  }
+
+  // 로고가 아닌 상황 아이콘은 돌 색 원 안에 조용히 둔다
+  &__icon {
+    display: grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 10px;
+    background: var(--surface-2);
+    border-radius: 50%;
+    color: var(--text-muted);
+    font-size: 28px;
   }
 
   &__title {

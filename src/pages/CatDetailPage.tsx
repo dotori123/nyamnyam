@@ -7,6 +7,7 @@ import { formatAge, formatDate, formatWeight } from '../utils/format';
 import CatAvatar from '../components/cat/CatAvatar';
 import RecordList from '../components/record/RecordList';
 import EmptyState from '../components/common/EmptyState';
+import Icon from '../components/common/Icon';
 import './CatDetailPage.scss';
 
 /** 상세 화면에 보여줄 최근 기록 개수 */
@@ -29,7 +30,6 @@ export default function CatDetailPage() {
   if (!cat) {
     return (
       <EmptyState
-        emoji="🙀"
         title="프로필을 찾을 수 없어요"
         description="삭제되었거나 잘못된 주소일 수 있어요."
         action={
@@ -59,7 +59,7 @@ export default function CatDetailPage() {
         <CatAvatar cat={cat} size="lg" />
         <h2 className="cat-detail__name">
           {cat.name}
-          <span className="cat-detail__gender">{gender.emoji}</span>
+          {gender.icon && <Icon name={gender.icon} title={gender.label} className="cat-detail__gender" />}
         </h2>
         <p className="cat-detail__meta">
           {[age, cat.breed, weight].filter(Boolean).join(' · ') || '정보 미입력'}
@@ -97,7 +97,7 @@ export default function CatDetailPage() {
           <div className="cat-detail__row">
             <dt>성별</dt>
             <dd>
-              {gender.emoji} {gender.label}
+              {gender.icon && <Icon name={gender.icon} />} {gender.label}
             </dd>
           </div>
           <div className="cat-detail__row">

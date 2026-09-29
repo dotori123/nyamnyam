@@ -33,8 +33,9 @@
     white-space: nowrap;
   }
 
-  &__emoji {
-    font-size: 12px;
+  &__icon {
+    font-size: 13px;
+    color: var(--text-muted);
   }
 
   // 값은 본문색, 보조는 흐리게. 막대 색을 글자에 쓰지 않는다
@@ -65,8 +66,7 @@
 
   &__bar {
     height: 100%;
-    // 시작은 각지게, 끝만 둥글게 — 막대가 기준선에서 자란다는 게 보이도록
-    border-radius: 0 4px 4px 0;
+    border-radius: 4px;
     transition: width 0.25s t.$ease;
   }
 }

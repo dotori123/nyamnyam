@@ -27,6 +27,7 @@ import Chip from '../common/Chip';
 import PhotoPicker from '../common/PhotoPicker';
 import CatSelect from '../cat/CatSelect';
 import RatingHearts from './RatingHearts';
+import Icon from '../common/Icon';
 import './RecordForm.scss';
 
 interface Props {
@@ -215,7 +216,8 @@ export default function RecordForm({
                 selected={values.foodType === option.value}
                 onClick={() => setFoodType(option.value)}
               >
-                {option.emoji} {option.label}
+                {option.icon && <Icon name={option.icon} />}
+                {option.label}
               </Chip>
             ))}
           </div>
@@ -294,7 +296,8 @@ export default function RecordForm({
                 selected={values.stool === option.value}
                 onClick={() => setValue('stool', option.value)}
               >
-                {option.emoji} {option.label}
+                {option.icon && <Icon name={option.icon} />}
+                {option.label}
               </Chip>
             ))}
           </div>
@@ -309,7 +312,8 @@ export default function RecordForm({
                 selected={values.repurchase === option.value}
                 onClick={() => setValue('repurchase', option.value)}
               >
-                {option.emoji} {option.label}
+                {option.icon && <Icon name={option.icon} />}
+                {option.label}
               </Chip>
             ))}
           </div>

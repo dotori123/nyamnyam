@@ -26,7 +26,6 @@ export default function RecordFormPage() {
   if (id && !editing) {
     return (
       <EmptyState
-        emoji="🙀"
         title="기록을 찾을 수 없어요"
         description="삭제되었거나 잘못된 주소일 수 있어요."
         action={

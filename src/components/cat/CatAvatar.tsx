@@ -1,4 +1,5 @@
 import type { Cat } from '../../types';
+import Icon from '../common/Icon';
 import './CatAvatar.scss';
 
 interface Props {
@@ -11,7 +12,7 @@ export default function CatAvatar({ cat, size = 'md' }: Props) {
   if (!cat) {
     return (
       <span className={`cat-avatar cat-avatar--${size} cat-avatar--empty`} aria-hidden="true">
-        🐾
+        <Icon name="paw" />
       </span>
     );
   }

@@ -1,5 +1,6 @@
 import type { FeedRecord, FoodType, RepurchaseIntent, StoolStatus } from '../types';
 import { FOOD_TYPE_MAP, REPURCHASE_MAP, STOOL_MAP } from './options';
+import type { IconName } from '../components/common/icons';
 
 /**
  * 기록 집계.
@@ -38,7 +39,7 @@ export interface StatRow {
   total?: number;
   /** 값 옆에 덧붙일 짧은 설명 ("100g당") */
   note?: string;
-  emoji?: string;
+  icon?: IconName;
 }
 
 /** 100g(또는 100ml)당 값. 환산할 수 없으면 null */
@@ -157,7 +158,7 @@ export function countByFoodType(records: FeedRecord[]): StatRow[] {
     .map(([type, count]) => ({
       key: type,
       label: FOOD_TYPE_MAP[type].label,
-      emoji: FOOD_TYPE_MAP[type].emoji,
+      icon: FOOD_TYPE_MAP[type].icon,
       value: count,
       count,
     }))
@@ -172,7 +173,6 @@ export function countByRepurchase(records: FeedRecord[]): StatRow[] {
     return {
       key: intent,
       label: REPURCHASE_MAP[intent].label,
-      emoji: REPURCHASE_MAP[intent].emoji,
       value: count,
       count,
     };
@@ -226,7 +226,7 @@ export function rankByUnitPrice(records: FeedRecord[], limit = 6): StatRow[] {
     .map(({ record, unitPrice }) => ({
       key: record.id,
       label: [record.brand, record.productName].filter(Boolean).join(' '),
-      emoji: FOOD_TYPE_MAP[record.foodType].emoji,
+      icon: FOOD_TYPE_MAP[record.foodType].icon,
       value: Math.round(unitPrice.per100),
       count: 1,
       note: `100${unitPrice.unit}당`,
@@ -248,7 +248,6 @@ export function countByStool(records: FeedRecord[]): StatRow[] {
     return {
       key: stool,
       label: STOOL_MAP[stool].label,
-      emoji: STOOL_MAP[stool].emoji,
       value: count,
       count,
     };

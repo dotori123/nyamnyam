@@ -1,6 +1,7 @@
 import { useRef, type ChangeEvent } from 'react';
 import type { Photo } from '../../types';
 import { MAX_PHOTOS } from '../../hooks/usePhotoPicker';
+import Icon from './Icon';
 import './PhotoPicker.scss';
 
 interface Props {
@@ -45,7 +46,7 @@ export default function PhotoPicker({
 
   const defaultHint = isFull
     ? isSingle
-      ? '사진을 바꾸려면 ✕로 지우고 다시 선택해 주세요.'
+      ? '사진을 바꾸려면 지우고 다시 선택해 주세요.'
       : `사진은 최대 ${max}장까지 등록할 수 있어요.`
     : `${photos.length} / ${max}장 · 이 기기에만 저장돼요.`;
 
@@ -82,7 +83,8 @@ export default function PhotoPicker({
           onClick={() => cameraInputRef.current?.click()}
           disabled={isFull || busy}
         >
-          📷 촬영하기
+          <Icon name="camera" />
+          촬영하기
         </button>
         <button
           type="button"
@@ -90,7 +92,8 @@ export default function PhotoPicker({
           onClick={() => albumInputRef.current?.click()}
           disabled={isFull || busy}
         >
-          🖼️ 앨범에서 선택
+          <Icon name="image" />
+          앨범에서 선택
         </button>
       </div>
 
@@ -109,7 +112,10 @@ export default function PhotoPicker({
                 className="photo-picker__image"
               />
               <span className="photo-picker__source">
-                {photo.source === 'camera' ? '📷' : '🖼️'}
+                <Icon
+                  name={photo.source === 'camera' ? 'camera' : 'image'}
+                  title={photo.source === 'camera' ? '촬영한 사진' : '앨범 사진'}
+                />
               </span>
               <button
                 type="button"
@@ -117,7 +123,7 @@ export default function PhotoPicker({
                 onClick={() => onRemove(photo.id)}
                 aria-label="사진 삭제"
               >
-                ✕
+                <Icon name="close" />
               </button>
             </li>
           ))}

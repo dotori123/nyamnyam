@@ -16,7 +16,6 @@ export default function CatFormPage() {
   if (isEdit && !cat) {
     return (
       <EmptyState
-        emoji="🙀"
         title="프로필을 찾을 수 없어요"
         description="삭제되었거나 잘못된 주소일 수 있어요."
         action={

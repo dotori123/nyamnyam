@@ -1,4 +1,5 @@
 import type { Rating } from '../../types';
+import Icon from '../common/Icon';
 import './RatingHearts.scss';
 
 const VALUES: Rating[] = [1, 2, 3, 4, 5];
@@ -18,9 +19,12 @@ export default function RatingHearts({ value, onChange, size = 'md', showValue =
     return (
       <span className={`rating rating--${size}`} aria-label={`만족도 5점 만점에 ${value}점`}>
         {VALUES.map((v) => (
-          <span key={v} className={v <= value ? 'rating__heart' : 'rating__heart rating__heart--off'} aria-hidden="true">
-            {v <= value ? '❤️' : '🤍'}
-          </span>
+          <Icon
+            key={v}
+            name="heart"
+            filled={v <= value}
+            className={v <= value ? 'rating__heart' : 'rating__heart rating__heart--off'}
+          />
         ))}
         {showValue && <span className="rating__value">{value}.0</span>}
       </span>
@@ -39,7 +43,7 @@ export default function RatingHearts({ value, onChange, size = 'md', showValue =
           className={v <= value ? 'rating__button' : 'rating__button rating__button--off'}
           onClick={() => onChange(v)}
         >
-          <span aria-hidden="true">{v <= value ? '❤️' : '🤍'}</span>
+          <Icon name="heart" filled={v <= value} />
         </button>
       ))}
       {showValue && <span className="rating__value">{value}.0</span>}

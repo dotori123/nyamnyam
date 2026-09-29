@@ -181,9 +181,9 @@ button {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 12px 18px;
+  padding: 12px 20px;
   border: 1px solid transparent;
-  border-radius: t.$radius-md;
+  border-radius: t.$radius-pill;
   font-size: 15px;
   font-weight: 600;
   transition: background 0.15s t.$ease, transform 0.1s t.$ease, border-color 0.15s t.$ease;

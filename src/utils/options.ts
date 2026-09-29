@@ -6,18 +6,20 @@ import type {
   VolumeUnit,
   SortKey,
 } from '../types';
+import type { IconName } from '../components/common/icons';
 
 interface Option<T> {
   value: T;
   label: string;
-  emoji?: string;
+  /** 목록·칩에서 글자 앞에 붙는 아이콘. 상태값(배변·재구매)은 색으로 구분하므로 두지 않는다 */
+  icon?: IconName;
 }
 
 export const FOOD_TYPE_OPTIONS: Option<FoodType>[] = [
-  { value: 'dry', label: '건사료', emoji: '🥣' },
-  { value: 'wet', label: '습식', emoji: '🥫' },
-  { value: 'treat', label: '간식', emoji: '🍤' },
-  { value: 'supplement', label: '영양제', emoji: '💊' },
+  { value: 'dry', label: '건사료', icon: 'bowl' },
+  { value: 'wet', label: '습식', icon: 'can' },
+  { value: 'treat', label: '간식', icon: 'fish' },
+  { value: 'supplement', label: '영양제', icon: 'pill' },
 ];
 
 /**
@@ -35,18 +37,18 @@ export const DEFAULT_VOLUME_UNIT: Record<FoodType, VolumeUnit> = {
 };
 
 export const STOOL_OPTIONS: Option<StoolStatus>[] = [
-  { value: 'good', label: '좋음', emoji: '💩' },
-  { value: 'soft', label: '무름', emoji: '💧' },
-  { value: 'diarrhea', label: '설사', emoji: '🌊' },
-  { value: 'hard', label: '딱딱', emoji: '🪨' },
-  { value: 'constipated', label: '변비', emoji: '😖' },
-  { value: 'unknown', label: '모름', emoji: '❔' },
+  { value: 'good', label: '좋음' },
+  { value: 'soft', label: '무름' },
+  { value: 'diarrhea', label: '설사' },
+  { value: 'hard', label: '딱딱' },
+  { value: 'constipated', label: '변비' },
+  { value: 'unknown', label: '모름' },
 ];
 
 export const REPURCHASE_OPTIONS: Option<RepurchaseIntent>[] = [
-  { value: 'yes', label: '재구매', emoji: '🔁' },
-  { value: 'maybe', label: '고민중', emoji: '🤔' },
-  { value: 'no', label: '안 살래', emoji: '🙅' },
+  { value: 'yes', label: '재구매' },
+  { value: 'maybe', label: '고민중' },
+  { value: 'no', label: '안 살래' },
 ];
 
 export const VOLUME_UNIT_OPTIONS: Option<VolumeUnit>[] = [
@@ -58,9 +60,9 @@ export const VOLUME_UNIT_OPTIONS: Option<VolumeUnit>[] = [
 ];
 
 export const GENDER_OPTIONS: Option<CatGender>[] = [
-  { value: 'male', label: '남아', emoji: '♂️' },
-  { value: 'female', label: '여아', emoji: '♀️' },
-  { value: 'unknown', label: '모름', emoji: '❔' },
+  { value: 'male', label: '남아', icon: 'male' },
+  { value: 'female', label: '여아', icon: 'female' },
+  { value: 'unknown', label: '모름' },
 ];
 
 export const SORT_OPTIONS: Option<SortKey>[] = [

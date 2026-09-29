@@ -8,6 +8,7 @@ import CatAvatar from '../components/cat/CatAvatar';
 import RatingHearts from '../components/record/RatingHearts';
 import Chip from '../components/common/Chip';
 import EmptyState from '../components/common/EmptyState';
+import Icon from '../components/common/Icon';
 import './RecordDetailPage.scss';
 
 export default function RecordDetailPage() {
@@ -22,7 +23,6 @@ export default function RecordDetailPage() {
   if (!record) {
     return (
       <EmptyState
-        emoji="🙀"
         title="기록을 찾을 수 없어요"
         description="삭제되었거나 잘못된 주소일 수 있어요."
         action={
@@ -71,7 +71,8 @@ export default function RecordDetailPage() {
         <h2 className="record-detail__name">{record.productName}</h2>
         <div className="record-detail__meta">
           <Chip as="span" size="sm">
-            {foodType.emoji} {foodType.label}
+            {foodType.icon && <Icon name={foodType.icon} />}
+            {foodType.label}
           </Chip>
           {record.flavor && (
             <Chip as="span" size="sm">
@@ -93,13 +94,13 @@ export default function RecordDetailPage() {
           <div className="record-detail__row">
             <dt>배변 상태</dt>
             <dd className={`record-detail__stool record-detail__stool--${record.stool}`}>
-              {stool.emoji} {stool.label}
+              {stool.label}
             </dd>
           </div>
           <div className="record-detail__row">
             <dt>재구매 의향</dt>
             <dd>
-              {repurchase.emoji} {repurchase.label}
+              {repurchase.label}
             </dd>
           </div>
         </dl>
@@ -153,7 +154,8 @@ export default function RecordDetailPage() {
           </Link>
           {/* 같은 사료를 또 사는 일이 잦다. 제품 정보를 물려받아 새 기록으로 넘어간다 */}
           <Link to={`/new?copy=${record.id}`} className="btn btn--primary">
-            🔁 다시 기록
+            <Icon name="repeat" />
+            다시 기록
           </Link>
         </div>
 

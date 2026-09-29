@@ -1,5 +1,6 @@
 import { useTheme } from '../../hooks/useTheme';
 import CatMark from '../common/CatMark';
+import Icon from '../common/Icon';
 import './ThemePicker.scss';
 
 /**
@@ -46,7 +47,7 @@ export default function ThemePicker() {
               </span>
 
               <span className="theme-picker__check" aria-hidden="true">
-                {selected ? '●' : ''}
+                {selected && <Icon name="check" />}
               </span>
             </button>
           </li>

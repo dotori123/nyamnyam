@@ -68,7 +68,7 @@ export default function StatsPage() {
   if (records.length === 0) {
     return (
       <EmptyState
-        emoji="📊"
+        icon="chart"
         title="아직 볼 통계가 없어요"
         description="기록이 몇 건 쌓이면 브랜드별 만족도와 지출을 여기서 볼 수 있어요."
         action={
@@ -101,7 +101,7 @@ export default function StatsPage() {
       )}
 
       {scoped.length === 0 ? (
-        <EmptyState emoji="🐾" title="이 아이의 기록이 아직 없어요" />
+        <EmptyState title="이 아이의 기록이 아직 없어요" />
       ) : (
         <>
           <ul className="stats-page__tiles">

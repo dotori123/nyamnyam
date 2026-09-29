@@ -15,7 +15,6 @@ export default function CatListPage() {
   if (cats.length === 0) {
     return (
       <EmptyState
-        emoji="🐈"
         title="등록된 고양이가 없어요"
         description="프로필을 만들면 기록을 고양이별로 나눠서 볼 수 있어요."
         action={

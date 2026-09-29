@@ -5,6 +5,7 @@ import { formatPrice, formatRelativeDate, formatUnitPrice, formatVolume } from '
 import { useCats } from '../../hooks/useCats';
 import CatAvatar from '../cat/CatAvatar';
 import RatingHearts from './RatingHearts';
+import Icon from '../common/Icon';
 import './RecordCard.scss';
 
 export default function RecordCard({ record }: { record: FeedRecord }) {
@@ -29,7 +30,7 @@ export default function RecordCard({ record }: { record: FeedRecord }) {
             <img src={thumbnail.url} alt="" className="record-card__image" />
           ) : (
             <span className="record-card__placeholder" aria-hidden="true">
-              {foodType.emoji}
+              <Icon name={foodType.icon ?? 'bowl'} />
             </span>
           )}
           {record.photos.length > 1 && (
@@ -66,13 +67,13 @@ export default function RecordCard({ record }: { record: FeedRecord }) {
           <div className="record-card__badges">
             <div className="record-card__badge-wrap">
               <span className="record-card__badge">
-                {foodType.emoji} {foodType.label}
+                {foodType.icon && <Icon name={foodType.icon} />} {foodType.label}
               </span>
               <span className={`record-card__badge record-card__badge--stool-${record.stool}`}>
-                {stool.emoji} {stool.label}
+                {stool.label}
               </span>
               <span className={`record-card__badge record-card__badge--repurchase-${record.repurchase}`}>
-                {repurchase.emoji} {repurchase.label}
+                {repurchase.label}
               </span>
             </div>
 

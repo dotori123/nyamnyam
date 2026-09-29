@@ -1,3 +1,4 @@
+import Icon from './Icon';
 import './SearchBar.scss';
 
 interface Props {
@@ -9,9 +10,7 @@ interface Props {
 export default function SearchBar({ value, onChange, placeholder = '검색' }: Props) {
   return (
     <div className="search-bar">
-      <span className="search-bar__icon" aria-hidden="true">
-        🔍
-      </span>
+      <Icon name="search" className="search-bar__icon" />
       <input
         type="search"
         className="search-bar__input"
@@ -27,7 +26,7 @@ export default function SearchBar({ value, onChange, placeholder = '검색' }: P
           onClick={() => onChange('')}
           aria-label="검색어 지우기"
         >
-          ✕
+          <Icon name="close" />
         </button>
       )}
     </div>

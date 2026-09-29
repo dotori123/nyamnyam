@@ -3,6 +3,7 @@ import type { Cat } from '../../types';
 import { GENDER_MAP } from '../../utils/options';
 import { formatAge, formatWeight } from '../../utils/format';
 import CatAvatar from './CatAvatar';
+import Icon from '../common/Icon';
 import './CatCard.scss';
 
 interface Props {
@@ -29,7 +30,7 @@ export default function CatCard({ cat, selected, recordCount, onSelect }: Props)
         <div className="cat-card__body">
           <div className="cat-card__top">
             <h3 className="cat-card__name">{cat.name}</h3>
-            <span className="cat-card__gender">{gender.emoji}</span>
+            {gender.icon && <Icon name={gender.icon} title={gender.label} className="cat-card__gender" />}
             {selected && <span className="cat-card__badge">선택됨</span>}
           </div>
           <p className="cat-card__meta">{meta || '정보 미입력'}</p>

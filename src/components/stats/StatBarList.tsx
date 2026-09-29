@@ -1,4 +1,5 @@
 import type { StatRow } from '../../utils/stats';
+import Icon from '../common/Icon';
 import './StatBarList.scss';
 
 interface Props {
@@ -44,11 +45,7 @@ export default function StatBarList({
           <li key={row.key} className="stat-bars__row">
             <div className="stat-bars__head">
               <span className="stat-bars__label">
-                {row.emoji && (
-                  <span className="stat-bars__emoji" aria-hidden="true">
-                    {row.emoji}
-                  </span>
-                )}
+                {row.icon && <Icon name={row.icon} className="stat-bars__icon" />}
                 {row.label}
               </span>
               <span className="stat-bars__value">

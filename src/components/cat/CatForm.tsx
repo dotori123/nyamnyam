@@ -12,6 +12,7 @@ import {
 import { usePhotoPicker, MAX_PROFILE_PHOTOS } from '../../hooks/usePhotoPicker';
 import Chip from '../common/Chip';
 import PhotoPicker from '../common/PhotoPicker';
+import Icon from '../common/Icon';
 import './CatForm.scss';
 
 interface Props {
@@ -169,7 +170,8 @@ export default function CatForm({
                 selected={values.gender === option.value}
                 onClick={() => setValue('gender', option.value as CatGender)}
               >
-                {option.emoji} {option.label}
+                {option.icon && <Icon name={option.icon} />}
+                {option.label}
               </Chip>
             ))}
           </div>
