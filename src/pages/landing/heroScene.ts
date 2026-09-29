@@ -78,7 +78,6 @@ export function startHeroScene(canvas: HTMLCanvasElement, themeSource: HTMLEleme
   const palette = {
     primary: color('--primary', '#f4a71a'),
     ink: color('--primary-ink', '#8f5a06'),
-    soft: color('--primary-soft', '#f9debd'),
     surface: color('--surface', '#ffffff'),
     line: color('--text', '#26261f'),
   };
@@ -126,7 +125,8 @@ export function startHeroScene(canvas: HTMLCanvasElement, themeSource: HTMLEleme
       s.bezierCurveTo(-1.1, 0.85, -0.45, 1.05, 0, 0.55);
       s.bezierCurveTo(0.45, 1.05, 1.1, 0.85, 1.1, 0.35);
       s.bezierCurveTo(1.1, -0.2, 0.2, -0.65, 0, -0.9);
-      return piece(extrude(s), mat(palette.soft));
+      // 앱의 만족도 하트와 같은 색. 옅은 --primary-soft는 크림 바탕에서 흰 종이처럼 보였다
+      return piece(extrude(s), mat(palette.ink));
     },
     paw: () => {
       const circle = (x: number, y: number, r: number) => {
