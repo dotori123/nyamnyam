@@ -20,7 +20,9 @@
     font-size: 11px;
   }
 
-  &:not(.chip--static):hover {
+  // 선택된 칩은 빼야 한다. 이 선택자가 .chip--selected:hover보다 구체적이라
+  // 선택된 칩 글자가 --text로 바뀌어, 포인트가 검정인 턱시도에서는 글자가 사라졌다.
+  &:not(.chip--static, .chip--selected):hover {
     border-color: var(--border-strong);
     color: var(--text);
   }

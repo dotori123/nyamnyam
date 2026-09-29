@@ -28,9 +28,22 @@
 | 보조 글자 | `--text-muted` | Body Brown `#474645` | 설명, 라벨 |
 | 흐린 글자 | `--text-faint` | Muted Gray `#7e7e7d` | 힌트, 비활성 탭, 꺼진 하트 |
 | 주 동작 | `--primary` / `--on-primary` | Ink Black `#121212` | 저장·다시 기록 같은 화면당 한 개의 채운 버튼, 선택된 칩 |
-| 포인트 글자 | `--primary-ink` | Ember Orange `#ff3e00` | 활성 탭, 링크, 강조 문구 (대비 4.5:1 이상) |
+| 포인트 글자·선 | `--primary-ink` | Ember Orange `#ff3e00` | 활성 탭, 링크, 강조 문구, 포커스 링, 선택 테두리, 켜진 하트 (대비 4.5:1 이상) |
 | 옅은 포인트 | `--primary-soft` | Honey 워시 | 포커스 링, 선택 배경 |
 | 상태 | `--good` / `--warn` / `--danger` | Mint / Gold / Alert Red | 배변·재구매 상태, 오류, 삭제 |
+
+### 대비 규칙
+
+라이트·다크 모드와 테마 5개 모두에서 지킨다. 테마를 바꾸거나 추가하면 다시 잰다.
+
+| 조합 | 최소 |
+| --- | --- |
+| `--text`, `--text-muted`, `--primary-ink`, 상태색 ↔ 바탕·카드·돌 면 | 4.5:1 |
+| `--on-primary` ↔ `--primary`, `--primary-hover` | 4.5:1 |
+| `--text-faint` ↔ 카드 면 | 3:1 (본문에는 쓰지 않는다) |
+
+- `--primary`는 **채움 전용**이다. 삼색이·치즈의 밝은 주황은 크림 바탕과 대비가 3:1이 안 나와서, 테두리·포커스 링·하트처럼 선으로 보여야 하는 곳에는 `--primary-ink`를 쓴다.
+- 선택 상태와 hover가 겹치는 곳은 hover가 선택 스타일을 덮지 않게 `:not(.xxx--selected):hover`로 쓴다. 선택된 칩에 hover가 걸리면 글자가 `--text`로 바뀌어, 턱시도에서 검정 위 검정 글씨가 되는 문제가 있었다.
 
 - 상태색은 테마와 무관하게 고정이다. 상태를 색**만으로** 알리지 않는다 — 늘 글자(좋음·무름…)가 함께 간다.
 - `--danger`는 오류·삭제·나쁜 상태에만. 따뜻한 강조가 필요하면 `--primary-ink`를 쓴다.
@@ -91,7 +104,7 @@
 
 ### 카드
 - `--surface` + 1px `--border` + `$radius-lg` + `--shadow-sm`.
-- hover에서만 `--shadow-md`. 선택된 카드는 테두리를 `--primary`로 바꾸고 `--primary-soft` 링.
+- hover에서만 `--shadow-md`. 선택된 카드는 테두리를 `--primary-ink`로 바꾸고 `--primary-soft` 링.
 
 ### 칩 · 배지
 - 칩(`Chip`) — 알약, 헤어라인, 13px 600. 선택되면 `--primary`로 채운다.
@@ -102,7 +115,7 @@
 - 검색 결과 없음(`search`), 통계 없음(`chart`)처럼 상황이 분명할 때만 `icon`을 넘긴다 — 돌색 원 안에 흐린 아이콘.
 
 ### 만족도 하트 (`RatingHearts`)
-- 같은 하트 모양을 켠 칸은 `--primary`로 채우고, 끈 칸은 `--text-faint` 선으로 남긴다.
+- 같은 하트 모양을 켠 칸은 `--primary-ink`로 채우고, 끈 칸은 `--text-faint` 선으로 남긴다.
 
 ## 아이콘
 

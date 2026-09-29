@@ -37,7 +37,7 @@
 
     &--on {
       border-style: solid;
-      border-color: var(--primary);
+      border-color: var(--primary-ink);
       color: var(--primary-ink);
     }
   }
@@ -119,7 +119,7 @@
 
     &:focus {
       outline: none;
-      border-color: var(--primary);
+      border-color: var(--primary-ink);
     }
   }
 }

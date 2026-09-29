@@ -75,7 +75,7 @@ button {
 }
 
 :focus-visible {
-  outline: 2px solid var(--primary);
+  outline: 2px solid var(--primary-ink);
   outline-offset: 2px;
 }
 
@@ -152,7 +152,7 @@ button {
 
   &:focus {
     outline: none;
-    border-color: var(--primary);
+    border-color: var(--primary-ink);
     box-shadow: 0 0 0 3px var(--primary-soft);
   }
 

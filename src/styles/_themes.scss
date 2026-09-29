@@ -9,6 +9,8 @@
 //
 // 시드 고를 때 주의:
 //  - primary-ink : 밝은 배경 위에서 '글자'로 쓸 오렌지/포인트색. 본문 대비 4.5:1을 넘겨야 한다.
+//                  테두리·포커스 링·하트처럼 '선'으로 쓸 때도 primary 대신 이 색을 쓴다
+//                  (밝은 primary는 크림 바탕 위에서 3:1이 안 나온다).
 //  - on-primary  : primary를 배경으로 깔았을 때 그 위에 얹을 글자색.
 //                  밝은 primary(삼색이·치즈)는 블랙, 어두운 primary(고등어·턱시도·크림)는 화이트.
 //
@@ -86,7 +88,7 @@ $themes: (
       // 더 연하게 가면 예쁘지만 포커스 링·선택 테두리가 바탕에 묻힌다(3:1 미달).
       // 파스텔 느낌은 바탕·면·primary-soft가 내고, 포인트색은 여기서 버틴다.
       primary: #d96e61,
-      primary-ink: #a94a3c,
+      primary-ink: #9c4033,
       ink: #322722,
       on-primary: #331c15,
     ),
@@ -191,14 +193,18 @@ $theme-ids: map.keys($themes);
   --surface-3: #{color.mix($ink, $bg, 12%)};
 
   --text: #{$ink};
-  --text-muted: #{color.mix($ink, $bg, 65%)};
-  --text-faint: #{color.mix($ink, $bg, 40%)};
+  // 보조 글자는 돌색 면(--surface-2) 위에서도 4.5:1을 넘겨야 한다 (배지·칩 글자가 거기 앉는다).
+  // 흐린 글자는 탭 라벨·힌트에도 쓰여서 3:1 아래로 내리지 않는다.
+  --text-muted: #{color.mix($ink, $bg, 76%)};
+  --text-faint: #{color.mix($ink, $bg, 60%)};
 
-  // 라이트에서는 어둡게, 다크에서는 밝게 눌러야 hover가 보인다.
+  // hover는 버튼 위 글자(on-primary)와 '멀어지는' 쪽으로 민다.
+  // 모드로 정하면 치즈·크림처럼 밝은 포인트에 어두운 글자를 얹는 테마에서
+  // hover가 글자 쪽으로 어두워져 대비가 4:1 밑으로 떨어진다.
   // (sass의 if() 함수는 CSS if()에 이름을 내주며 deprecated라 @if로 쓴다)
-  $hover: color.scale($primary, $lightness: 14%);
-  @if $mode == light {
-    $hover: color.scale($primary, $lightness: -12%);
+  $hover: color.scale($primary, $lightness: -12%);
+  @if color.channel($on-primary, 'lightness', $space: hsl) < 50% {
+    $hover: color.scale($primary, $lightness: 14%);
   }
 
   --primary: #{$primary};
@@ -212,9 +218,10 @@ $theme-ids: map.keys($themes);
 
   // 상태색은 브랜드 테마와 무관하게 일정해야 읽힌다
   @if $mode == light {
-    --good: #3f8f63;
-    --warn: #b8791a;
-    --danger: #c0453f;
+    // 상태 배지가 돌색 면 위 10px 글자라 4.5:1을 넘기도록 어둡게 잡는다
+    --good: #2b7250;
+    --warn: #875a0d;
+    --danger: #b13a34;
 
     // 면은 그림자가 아니라 1px 헤어라인(--border)으로 나눈다 (DESIGN.md "깊이").
     // 그림자는 떠 있다는 느낌만 아주 옅게 — 종이에 눌러 찍은 듯 납작하게 둔다.

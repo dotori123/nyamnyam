@@ -11,7 +11,7 @@
   transition: border-color 0.15s t.$ease, box-shadow 0.15s t.$ease;
 
   &:focus-within {
-    border-color: var(--primary);
+    border-color: var(--primary-ink);
     box-shadow: 0 0 0 3px var(--primary-soft);
   }
 

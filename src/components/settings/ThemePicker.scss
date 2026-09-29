@@ -19,7 +19,8 @@
     text-align: left;
     transition: border-color 0.15s t.$ease, box-shadow 0.15s t.$ease, transform 0.1s t.$ease;
 
-    &:hover {
+    // 선택된 카드의 강조 테두리를 hover가 덮지 않게
+    &:not(.theme-picker__card--selected):hover {
       border-color: var(--border-strong);
     }
 
@@ -28,7 +29,7 @@
     }
 
     &--selected {
-      border-color: var(--primary);
+      border-color: var(--primary-ink);
       box-shadow: 0 0 0 3px var(--primary-soft);
     }
   }
@@ -100,7 +101,7 @@
   &__check {
     flex: 0 0 auto;
     width: 14px;
-    color: var(--primary);
+    color: var(--primary-ink);
     font-size: 12px;
     text-align: center;
   }

@@ -5,8 +5,9 @@
   align-items: center;
   gap: 1px;
   line-height: 1;
-  // 켜진 칸은 테마 포인트색으로 채우고, 꺼진 칸은 같은 모양의 빈 선으로 남긴다
-  color: var(--primary);
+  // 켜진 칸은 포인트 글자색으로 채우고, 꺼진 칸은 같은 모양의 빈 선으로 남긴다.
+  // --primary는 삼색이·치즈에서 바탕과 대비가 3:1이 안 돼 하트가 흐려 보인다.
+  color: var(--primary-ink);
 
   &--sm {
     font-size: 11px;
