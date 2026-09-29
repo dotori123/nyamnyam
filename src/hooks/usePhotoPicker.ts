@@ -100,6 +100,18 @@ export function usePhotoPicker(initialPhotos: Photo[] = [], max: number = MAX_PH
   }, []);
 
   /**
+   * 대표사진으로 — 맨 앞으로 옮긴다.
+   * 목록 썸네일·제품별 보기가 photos[0]을 쓰므로 순서만 바꾸면 되고, 저장 구조는 그대로다.
+   */
+  const makeCover = useCallback((id: string) => {
+    const target = photosRef.current.find((photo) => photo.id === id);
+    if (!target) return;
+    const next = [target, ...photosRef.current.filter((photo) => photo.id !== id)];
+    photosRef.current = next;
+    setPhotos(next);
+  }, []);
+
+  /**
    * 저장 완료 — blob URL 소유권을 저장된 기록으로 넘긴다.
    * 소유 목록을 비우면 unmount 시 회수 대상에서 빠진다.
    */
@@ -120,6 +132,7 @@ export function usePhotoPicker(initialPhotos: Photo[] = [], max: number = MAX_PH
     photos,
     addFiles,
     removePhoto,
+    makeCover,
     commit,
     busy,
     max,

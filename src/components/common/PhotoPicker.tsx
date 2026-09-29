@@ -8,6 +8,8 @@ interface Props {
   photos: Photo[];
   onAddFiles: (files: FileList | null, source: Photo['source']) => void;
   onRemove: (id: string) => void;
+  /** 넘기면 사진마다 '대표로' 버튼이 생긴다. 첫 사진이 대표(목록 썸네일)다 */
+  onMakeCover?: (id: string) => void;
   isFull: boolean;
   /** 고른 사진을 줄이는 중 */
   busy?: boolean;
@@ -29,6 +31,7 @@ export default function PhotoPicker({
   photos,
   onAddFiles,
   onRemove,
+  onMakeCover,
   isFull,
   busy = false,
   max = MAX_PHOTOS,
@@ -37,6 +40,9 @@ export default function PhotoPicker({
   const cameraInputRef = useRef<HTMLInputElement>(null);
   const albumInputRef = useRef<HTMLInputElement>(null);
   const isSingle = max === 1;
+  // 전체 목록 기준 첫 사진. 이 기기에 원본이 없어 가려진 사진이 대표일 수도 있어서 id로 비교한다
+  const coverId = photos[0]?.id;
+  const canPickCover = Boolean(onMakeCover) && !isSingle && photos.length > 1;
 
   const handleChange = (source: Photo['source']) => (event: ChangeEvent<HTMLInputElement>) => {
     onAddFiles(event.target.files, source);
@@ -99,7 +105,7 @@ export default function PhotoPicker({
 
       {photos.length > 0 && (
         <ul className="photo-picker__list">
-          {photos.filter((photo) => photo.url).map((photo) => (
+          {photos.filter((photo) => photo.url).map((photo, index) => (
             <li
               key={photo.id}
               className={
@@ -117,6 +123,19 @@ export default function PhotoPicker({
                   title={photo.source === 'camera' ? '촬영한 사진' : '앨범 사진'}
                 />
               </span>
+              {canPickCover &&
+                (photo.id === coverId ? (
+                  <span className="photo-picker__cover photo-picker__cover--on">대표</span>
+                ) : (
+                  <button
+                    type="button"
+                    className="photo-picker__cover"
+                    onClick={() => onMakeCover?.(photo.id)}
+                    aria-label={`${index + 1}번째 사진을 대표사진으로`}
+                  >
+                    대표로
+                  </button>
+                ))}
               <button
                 type="button"
                 className="photo-picker__remove"

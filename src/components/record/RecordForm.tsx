@@ -79,7 +79,7 @@ export default function RecordForm({
     toFormValues(initialRecord, selectedCatId),
   );
   const [errors, setErrors] = useState<Errors>({});
-  const { photos, addFiles, removePhoto, commit, busy, isFull } = usePhotoPicker(
+  const { photos, addFiles, removePhoto, makeCover, commit, busy, isFull } = usePhotoPicker(
     initialRecord?.photos ?? [],
   );
 
@@ -171,6 +171,7 @@ export default function RecordForm({
           photos={photos}
           onAddFiles={addFiles}
           onRemove={removePhoto}
+          onMakeCover={makeCover}
           isFull={isFull}
           busy={busy}
         />
