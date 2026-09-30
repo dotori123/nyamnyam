@@ -36,8 +36,9 @@ export default function RecordDetailPage() {
 
   const cat = getCat(record.catId);
   const foodType = FOOD_TYPE_MAP[record.foodType];
-  const stool = STOOL_MAP[record.stool];
-  const repurchase = REPURCHASE_MAP[record.repurchase];
+  // 안 고른 값(null)은 줄째로 뺀다
+  const stool = record.stool ? STOOL_MAP[record.stool] : null;
+  const repurchase = record.repurchase ? REPURCHASE_MAP[record.repurchase] : null;
   const volume = formatVolume(record.volume);
   const unitPrice = formatUnitPrice(record);
   const shownPhotos = record.photos.filter((photo) => photo.url);
@@ -97,22 +98,24 @@ export default function RecordDetailPage() {
         </section>
       )}
 
-      {record.rating !== null && (
+      {(stool || repurchase) && (
         <section className="record-detail__section">
           <h3 className="record-detail__section-title">후기</h3>
           <dl className="record-detail__rows">
-            <div className="record-detail__row">
-              <dt>배변 상태</dt>
-              <dd className={`record-detail__stool record-detail__stool--${record.stool}`}>
-                {stool.label}
-              </dd>
-            </div>
-            <div className="record-detail__row">
-              <dt>재구매 의향</dt>
-              <dd>
-                {repurchase.label}
-              </dd>
-            </div>
+            {stool && (
+              <div className="record-detail__row">
+                <dt>배변 상태</dt>
+                <dd className={`record-detail__stool record-detail__stool--${record.stool}`}>
+                  {stool.label}
+                </dd>
+              </div>
+            )}
+            {repurchase && (
+              <div className="record-detail__row">
+                <dt>재구매 의향</dt>
+                <dd>{repurchase.label}</dd>
+              </div>
+            )}
           </dl>
         </section>
       )}

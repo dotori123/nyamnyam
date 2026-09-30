@@ -50,10 +50,10 @@ function toFormValues(record?: FeedRecord, defaultCatId: string | null = null): 
     foodType: record?.foodType ?? 'dry',
     volumeAmount: record?.volume ? String(record.volume.amount) : '',
     volumeUnit: record?.volume?.unit ?? 'g',
-    // 새 기록은 3점에서 시작하고, 기존 기록의 null(평가 전)은 그대로 둔다 (?? 3이면 3점이 된다)
-    rating: record ? record.rating : 3,
-    stool: record?.stool ?? 'unknown',
-    repurchase: record?.repurchase ?? 'maybe',
+    // 먹은 후기는 아무것도 고르지 않은 채로 시작한다. 사 두기만 했으면 그대로 저장하면 된다
+    rating: record?.rating ?? null,
+    stool: record?.stool ?? null,
+    repurchase: record?.repurchase ?? null,
     price: record?.price != null ? String(record.price) : '',
     store: record?.store ?? '',
     purchasedAt: toDateInputValue(record?.purchasedAt ?? null),
@@ -139,9 +139,8 @@ export default function RecordForm({
       foodType: values.foodType,
       volume: volume.value === null ? null : { amount: volume.value, unit: values.volumeUnit },
       rating: values.rating,
-      // 평가 전이면 배변·재구매는 아직 겪은 일이 아니다. 기본값으로 비워 둔다
-      stool: values.rating === null ? 'unknown' : values.stool,
-      repurchase: values.rating === null ? 'maybe' : values.repurchase,
+      stool: values.stool,
+      repurchase: values.repurchase,
       price: priceField.value,
       currency: 'KRW',
       store: values.store.trim(),
@@ -291,64 +290,54 @@ export default function RecordForm({
 
       <section className="record-form__section">
         <h2 className="record-form__section-title">먹은 후기</h2>
+        <p className="field__hint">
+          먹여 보기 전이면 비워 두세요. 고른 것을 한 번 더 누르면 선택이 풀려요.
+        </p>
 
         <div className="field">
           <span className="field__label">만족도</span>
           <RatingHearts
             value={values.rating}
-            onChange={(rating: Rating) => setValue('rating', rating)}
+            onChange={(rating: Rating | null) => setValue('rating', rating)}
             size="lg"
             showValue
           />
-          {values.rating === null ? (
-            <p className="field__hint">아직 평가 전이에요. 먹여 본 뒤 하트를 눌러 주세요.</p>
-          ) : (
-            // 사 두기만 하고 아직 안 먹였을 때. 통계·평균에서 빠진다 (utils/review.ts)
-            <button
-              type="button"
-              className="record-form__pending"
-              onClick={() => setValue('rating', null)}
-            >
-              아직 안 먹여 봤어요 · 평가 전으로 두기
-            </button>
-          )}
         </div>
 
-        {values.rating !== null && (
-          <>
-            <div className="field">
-              <span className="field__label">배변 상태</span>
-              <div className="record-form__chips">
-                {STOOL_OPTIONS.map((option) => (
-                  <Chip
-                    key={option.value}
-                    selected={values.stool === option.value}
-                    onClick={() => setValue('stool', option.value)}
-                  >
-                    {option.icon && <Icon name={option.icon} />}
-                    {option.label}
-                  </Chip>
-                ))}
-              </div>
-            </div>
+        <div className="field">
+          <span className="field__label">배변 상태</span>
+          <div className="record-form__chips">
+            {STOOL_OPTIONS.map((option) => (
+              <Chip
+                key={option.value}
+                selected={values.stool === option.value}
+                // 같은 칩을 다시 누르면 안 고른 상태로
+                onClick={() => setValue('stool', values.stool === option.value ? null : option.value)}
+              >
+                {option.icon && <Icon name={option.icon} />}
+                {option.label}
+              </Chip>
+            ))}
+          </div>
+        </div>
 
-            <div className="field">
-              <span className="field__label">재구매 의향</span>
-              <div className="record-form__chips">
-                {REPURCHASE_OPTIONS.map((option) => (
-                  <Chip
-                    key={option.value}
-                    selected={values.repurchase === option.value}
-                    onClick={() => setValue('repurchase', option.value)}
-                  >
-                    {option.icon && <Icon name={option.icon} />}
-                    {option.label}
-                  </Chip>
-                ))}
-              </div>
-            </div>
-          </>
-        )}
+        <div className="field">
+          <span className="field__label">재구매 의향</span>
+          <div className="record-form__chips">
+            {REPURCHASE_OPTIONS.map((option) => (
+              <Chip
+                key={option.value}
+                selected={values.repurchase === option.value}
+                onClick={() =>
+                  setValue('repurchase', values.repurchase === option.value ? null : option.value)
+                }
+              >
+                {option.icon && <Icon name={option.icon} />}
+                {option.label}
+              </Chip>
+            ))}
+          </div>
+        </div>
       </section>
 
       <section className="record-form__section">

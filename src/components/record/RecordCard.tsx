@@ -16,8 +16,9 @@ export default function RecordCard({ record }: { record: FeedRecord }) {
   const badgeCat = cats.length > 1 ? cat : undefined;
   const thumbnail = record.photos[0];
   const foodType = FOOD_TYPE_MAP[record.foodType];
-  const stool = STOOL_MAP[record.stool];
-  const repurchase = REPURCHASE_MAP[record.repurchase];
+  // 안 고른 값(null)은 배지를 달지 않는다
+  const stool = record.stool ? STOOL_MAP[record.stool] : null;
+  const repurchase = record.repurchase ? REPURCHASE_MAP[record.repurchase] : null;
   const volume = formatVolume(record.volume);
   // 목록에서 제품끼리 비교할 때 실제로 쓰는 값. 개·팩 단위는 환산이 안 돼 null이다
   const unitPrice = formatUnitPrice(record);
@@ -69,16 +70,15 @@ export default function RecordCard({ record }: { record: FeedRecord }) {
               <span className="record-card__badge">
                 {foodType.icon && <Icon name={foodType.icon} />} {foodType.label}
               </span>
-              {/* 평가 전이면 배변·재구매는 아직 결과가 아니다 */}
-              {record.rating !== null && (
-                <>
-                  <span className={`record-card__badge record-card__badge--stool-${record.stool}`}>
-                    {stool.label}
-                  </span>
-                  <span className={`record-card__badge record-card__badge--repurchase-${record.repurchase}`}>
-                    {repurchase.label}
-                  </span>
-                </>
+              {stool && (
+                <span className={`record-card__badge record-card__badge--stool-${record.stool}`}>
+                  {stool.label}
+                </span>
+              )}
+              {repurchase && (
+                <span className={`record-card__badge record-card__badge--repurchase-${record.repurchase}`}>
+                  {repurchase.label}
+                </span>
               )}
             </div>
 

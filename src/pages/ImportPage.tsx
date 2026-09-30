@@ -69,8 +69,8 @@ export default function ImportPage() {
         volume: totalVolume(row),
         // 산 직후라 아직 먹여 보지 않았다
         rating: null,
-        stool: 'unknown',
-        repurchase: 'maybe',
+        stool: null,
+        repurchase: null,
         price: row.price,
         currency: 'KRW',
         store: row.store,

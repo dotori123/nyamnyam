@@ -8,7 +8,8 @@ interface Props {
   /** null이면 평가 전 — 읽기 전용에서는 "평가 전" 배지, 입력에서는 하트가 모두 꺼진 상태 */
   value: Rating | null;
   /** 넘기지 않으면 읽기 전용 표시 */
-  onChange?: (value: Rating) => void;
+  /** 이미 고른 하트를 다시 누르면 null(안 고름)을 넘긴다 */
+  onChange?: (value: Rating | null) => void;
   size?: 'sm' | 'md' | 'lg';
   showValue?: boolean;
 }
@@ -47,7 +48,7 @@ export default function RatingHearts({ value, onChange, size = 'md', showValue =
           tabIndex={v === (value ?? 1) ? 0 : -1}
           aria-label={`${v}점`}
           className={value !== null && v <= value ? 'rating__button' : 'rating__button rating__button--off'}
-          onClick={() => onChange(v)}
+          onClick={() => onChange(v === value ? null : v)}
         >
           <Icon name="heart" filled={value !== null && v <= value} />
         </button>

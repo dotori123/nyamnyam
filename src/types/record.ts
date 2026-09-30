@@ -68,10 +68,10 @@ export interface FeedRecord {
   // ── 평가 ──────────────────────────────────
   /** 만족도 (하트 1~5). null이면 아직 먹여 보기 전 — "평가 전" (utils/review.ts) */
   rating: Rating | null;
-  /** 배변 상태 */
-  stool: StoolStatus;
-  /** 재구매 의향 */
-  repurchase: RepurchaseIntent;
+  /** 배변 상태. null이면 아직 고르지 않았다 ('unknown'은 "모름"을 직접 고른 것) */
+  stool: StoolStatus | null;
+  /** 재구매 의향. null이면 아직 고르지 않았다 */
+  repurchase: RepurchaseIntent | null;
 
   // ── 구매 정보 ──────────────────────────────
   /** 가격(원). 미입력 시 null */
@@ -110,8 +110,8 @@ export interface FeedRecordFormValues {
   volumeUnit: VolumeUnit;
   /** null이면 평가 전으로 저장한다 */
   rating: Rating | null;
-  stool: StoolStatus;
-  repurchase: RepurchaseIntent;
+  stool: StoolStatus | null;
+  repurchase: RepurchaseIntent | null;
   price: string;
   store: string;
   purchasedAt: string;

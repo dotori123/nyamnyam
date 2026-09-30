@@ -51,8 +51,8 @@ export default function RecordFormPage() {
     ? {
         ...source,
         rating: null,
-        stool: 'unknown' as const,
-        repurchase: 'maybe' as const,
+        stool: null,
+        repurchase: null,
         purchasedAt: null,
         photos: [],
         memo: '',

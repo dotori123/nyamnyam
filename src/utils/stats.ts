@@ -13,7 +13,7 @@ import { averageRating, isRated } from './review';
  * 공통 규칙
  *  - 가격이 없는 기록(price === null)은 지출 계산에서 뺀다. 0원으로 치면 평균이 왜곡된다.
  *  - 구매일이 없는 기록(purchasedAt === null)은 월별 지출에서 뺀다.
- *  - 평가 전 기록(rating === null)은 만족도·배변·재구매 집계에서 뺀다. 아직 먹여 보지 않았다.
+ *  - 만족도·배변·재구매는 각자 고른 기록만 센다 (안 고르면 null). 평가 전(rating === null)이어도
  *    지출·종류·단가처럼 산 사실만으로 세는 집계에는 넣는다.
  */
 
@@ -27,7 +27,7 @@ export interface Summary {
   totalSpend: number;
   /** 가격이 적힌 기록 수 — "10건 중 7건 기준" 같은 안내에 쓴다 */
   pricedCount: number;
-  /** 재구매 의향 비율 0~1 (평가한 기록 중). 평가한 기록이 없으면 null */
+  /** 재구매 의향 비율 0~1 (재구매 의향을 고른 기록 중). 고른 기록이 없으면 null */
   repurchaseRate: number | null;
 }
 
@@ -114,6 +114,7 @@ export function summarize(records: FeedRecord[]): Summary {
 
   const priced = records.filter((record) => record.price !== null);
   const rated = records.filter(isRated);
+  const chosen = records.filter((record) => record.repurchase !== null);
 
   return {
     count,
@@ -121,8 +122,8 @@ export function summarize(records: FeedRecord[]): Summary {
     pendingCount: count - rated.length,
     totalSpend: priced.reduce((sum, record) => sum + (record.price ?? 0), 0),
     pricedCount: priced.length,
-    repurchaseRate: rated.length
-      ? rated.filter((record) => record.repurchase === 'yes').length / rated.length
+    repurchaseRate: chosen.length
+      ? chosen.filter((record) => record.repurchase === 'yes').length / chosen.length
       : null,
   };
 }
@@ -177,7 +178,7 @@ export function countByFoodType(records: FeedRecord[]): StatRow[] {
 export function countByRepurchase(records: FeedRecord[]): StatRow[] {
   const order: RepurchaseIntent[] = ['yes', 'maybe', 'no'];
   return order.map((intent) => {
-    const count = records.filter((record) => isRated(record) && record.repurchase === intent).length;
+    const count = records.filter((record) => record.repurchase === intent).length;
     return {
       key: intent,
       label: REPURCHASE_MAP[intent].label,
@@ -252,7 +253,7 @@ export function countComparableForUnitPrice(records: FeedRecord[]): number {
 export function countByStool(records: FeedRecord[]): StatRow[] {
   const order: StoolStatus[] = ['good', 'soft', 'diarrhea', 'hard', 'constipated', 'unknown'];
   return order.map((stool) => {
-    const count = records.filter((record) => isRated(record) && record.stool === stool).length;
+    const count = records.filter((record) => record.stool === stool).length;
     return {
       key: stool,
       label: STOOL_MAP[stool].label,
@@ -276,8 +277,8 @@ export function rankBrandsByStoolTrouble(records: FeedRecord[], limit = 5): Stat
 
   for (const record of records) {
     if (!record.brand) continue;
-    // 모름·평가 전은 분모에서도 뺀다
-    if (record.stool === 'unknown' || !isRated(record)) continue;
+    // 안 고름·모름은 분모에서도 뺀다
+    if (record.stool === null || record.stool === 'unknown') continue;
 
     const bucket = buckets.get(record.brand) ?? { trouble: 0, judged: 0 };
     bucket.judged += 1;

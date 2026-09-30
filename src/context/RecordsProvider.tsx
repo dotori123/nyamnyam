@@ -7,6 +7,7 @@ import { dehydratePhoto, hydratePhotos, needsHydration } from '../storage/photos
 import { createRecord, deleteRecord, patchRecord, subscribeRecords } from '../firebase/records';
 import { useAuth } from '../hooks/useAuth';
 import { RecordsContext, type RecordsContextValue } from './recordsContext';
+import { normalizeReview } from '../utils/review';
 
 /**
  * 기록 저장소.
@@ -33,7 +34,7 @@ const EMPTY: FeedRecord[] = [];
 
 /** 저장된 기록. 없으면(첫 실행) mock으로 시작한다 */
 function loadRecords(): FeedRecord[] {
-  return readArray<FeedRecord>(STORAGE_KEYS.records) ?? MOCK_RECORDS;
+  return (readArray<FeedRecord>(STORAGE_KEYS.records) ?? MOCK_RECORDS).map(normalizeReview);
 }
 
 export function RecordsProvider({ children }: { children: ReactNode }) {
@@ -183,6 +184,6 @@ export function RecordsProvider({ children }: { children: ReactNode }) {
 
 function hydrateAll(records: FeedRecord[], uid?: string | null): Promise<FeedRecord[]> {
   return Promise.all(
-    records.map(async (record) => ({ ...record, photos: await hydratePhotos(record.photos, uid) })),
+    records.map(async (record) => ({ ...normalizeReview(record), photos: await hydratePhotos(record.photos, uid) })),
   );
 }

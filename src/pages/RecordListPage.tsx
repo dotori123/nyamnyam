@@ -10,7 +10,7 @@ import { groupByProduct, sortProducts } from '../utils/products';
 import EmptyState from '../components/common/EmptyState';
 import LoadingState from '../components/common/LoadingState';
 import './RecordListPage.scss';
-import { averageRating, isRated } from '../utils/review';
+import { averageRating } from '../utils/review';
 
 export default function RecordListPage() {
   const { records, brands, flavors, loading } = useRecords();
@@ -42,7 +42,7 @@ export default function RecordListPage() {
 
   const ratingAverage = averageRating(records);
   const repurchaseCount = records.filter(
-    (record) => isRated(record) && record.repurchase === 'yes',
+    (record) => record.repurchase === 'yes',
   ).length;
 
   // 불러오는 중에 "기록이 없어요"를 띄우면 있는 사람에게 없다고 하는 셈이다
